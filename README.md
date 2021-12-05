@@ -206,12 +206,3 @@ previously.
 - `7za` should be preferred over `unzip` and `zip` for compatibility reasons.
 - If you experience some strange crashes on MSYS2 tools, try the phpsdk_rebase_msys2 tool. MSYS2 tools might be have unstable
   on ASLR enabled systems.
-
----
-
-This project has adopted the [Microsoft Open Source Code of
-Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct
-FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
-with any additional questions or comments.
