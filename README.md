@@ -14,7 +14,7 @@ The PHP SDK 2.2+ is compatible with PHP 7.2 and above.
 
 The PHP SDK 2.1 is required to build PHP 7.1 or 7.0.
 
-The legacy binary tools SDK is available from the [legacy branch](https://github.com/Microsoft/php-sdk-binary-tools/tree/legacy) and is suitable to build PHP 5.
+The legacy binary tools SDK is available from the [legacy branch](https://github.com/php/php-sdk-binary-tools/tree/legacy) and is suitable to build PHP 5.
 
 # Requirements
 
@@ -67,7 +67,7 @@ It is not required to hold the source in the PHP SDK directory. It could be usef
 
 ## Basic usage example
 
-- `git clone https://github.com/Microsoft/php-sdk-binary-tools.git c:\php-sdk`
+- `git clone https://github.com/php/php-sdk-binary-tools.git c:\php-sdk`
 - `cd c:\php-sdk`
 - `git checkout php-sdk-2.1.9` or later
 - invoke `phpsdk-vc15-x64.bat`
@@ -80,7 +80,7 @@ More extensive documentation can be found on the [wiki](https://wiki.php.net/int
 
 ## The old way
 
-- `git clone https://github.com/Microsoft/php-sdk-binary-tools.git c:\php-sdk`
+- `git clone https://github.com/php/php-sdk-binary-tools.git c:\php-sdk`
 - follow the instructions on the PHP [wiki page](https://wiki.php.net/internals/windows/stepbystepbuild "PHP wiki page")
 
 # Customizing
