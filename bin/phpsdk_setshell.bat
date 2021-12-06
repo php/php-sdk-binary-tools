@@ -44,32 +44,62 @@ if 14 gtr %TMP_CHK% (
 set PHP_SDK_VS_NUM=%TMP_CHK%
 set TMP_CHK=
 
-if /i not "%2"=="x64" (
-	if /i not "%2"=="x86" (
-		echo Unsupported arch "%2"
-		goto out_error
-	)
+rem check target arch
+if "%2"=="x86" set PHP_SDK_ARCH=%2
+if "%2"=="x64" set PHP_SDK_ARCH=%2
+if "%2"=="x86_64" set PHP_SDK_ARCH=x64
+if "%2"=="amd64" set PHP_SDK_ARCH=x64
+if "%2"=="arm64" set PHP_SDK_ARCH=%2
+if "%PHP_SDK_ARCH%"=="" (
+	echo Unsupported target arch %2 >&2
+	goto out_error
 )
-
-set PHP_SDK_ARCH=%2
 
 rem check OS arch
-set TMPKEY=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion
-reg query "%TMPKEY%" /v "ProgramFilesDir (x86)" >nul 2>nul
-if not errorlevel 1 (
-	set PHP_SDK_OS_ARCH=x64
-) else (
-	if /i "%PHP_SDK_ARCH%"=="x64" (
-		echo 32-bit OS detected, native 64-bit toolchain is unavailable.
-		goto out_error
-	)
-	set PHP_SDK_OS_ARCH=x86
+rem todo: allow user choose host sdk arch (i.e. x64 target can be compiled at x64(native) or x86(cross))
+for /f "usebackq tokens=1*" %%i in (`wmic cpu get Architecture /value /format:table ^| findstr /r "[1234567890][1234567890]*"`) do (
+	set PHP_SDK_OS_ARCH_NUM=%%i
 )
-set TMPKEY=
+
+goto os_arch_cases
+:os_arch_error
+echo Unsupported OS arch %PHP_SDK_OS_ARCH% >&2
+goto out_error
+
+:os_arch_cases
+if "%PHP_SDK_OS_ARCH_NUM%"=="0" set PHP_SDK_OS_ARCH=x86
+if "%PHP_SDK_OS_ARCH_NUM%"=="1" (set PHP_SDK_OS_ARCH=mips && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="2" (set PHP_SDK_OS_ARCH=alpha && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="3" (set PHP_SDK_OS_ARCH=ppc && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="4" (set PHP_SDK_OS_ARCH=shx && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="5" (set PHP_SDK_OS_ARCH=arm32 && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="6" (set PHP_SDK_OS_ARCH=ia64 && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="7" (set PHP_SDK_OS_ARCH=alpha64 && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="8" (set PHP_SDK_OS_ARCH=msil && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="9" set PHP_SDK_OS_ARCH=x64
+rem wow64
+if "%PHP_SDK_OS_ARCH_NUM%"=="10" set PHP_SDK_OS_ARCH=x86
+if "%PHP_SDK_OS_ARCH_NUM%"=="11" (set PHP_SDK_OS_ARCH=neutral && goto os_arch_error)
+if "%PHP_SDK_OS_ARCH_NUM%"=="12" set PHP_SDK_OS_ARCH=arm64
+if "%PHP_SDK_OS_ARCH_NUM%"=="13" (set PHP_SDK_OS_ARCH=arm32 && goto os_arch_error)
+rem woa64
+if "%PHP_SDK_OS_ARCH_NUM%"=="14" set PHP_SDK_OS_ARCH=x86
+if "%PHP_SDK_OS_ARCH%"=="" (
+	goto os_arch_error
+)
+
+set PHP_SDK_OS_ARCH_NUM=
+
+rem cross compile is ok, so we donot need this
+rem if not /i "%PHP_SDK_ARCH%"=="PHP_SDK_OS_ARCH" (
+rem 	echo 32-bit OS detected, native 64-bit toolchain is unavailable.
+rem 	goto out_error
+rem )
 
 rem get vc base dir
 if 15 gtr %PHP_SDK_VS_NUM% (
-	if /i "%PHP_SDK_OS_ARCH%"=="x64" (
+	rem for arch other than x86, use WOW6432
+	if /i not "%PHP_SDK_OS_ARCH%"=="x86" (
 		set TMPKEY=HKLM\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\%PHP_SDK_VS:~2%.0\Setup\VC
 	) else (
 		set TMPKEY=HKLM\SOFTWARE\Microsoft\VisualStudio\%PHP_SDK_VS:~2%.0\Setup\VC
@@ -85,16 +115,20 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 	set /a PHP_SDK_VS_RANGE=PHP_SDK_VS_NUM + 1
 	set PHP_SDK_VS_RANGE="[%PHP_SDK_VS_NUM%,!PHP_SDK_VS_RANGE%!)"
 
-	for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -format text') do (
+	set APPEND=x86.x64
+	if /i "%PHP_SDK_OS_ARCH%"=="arm64" (
+		set APPEND=ARM64
+	)
+	for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 		set PHP_SDK_VC_DIR=%%b\VC
 	)
 	if not exist "!PHP_SDK_VC_DIR!" (
-		for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -products Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -format text') do (
+		for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -products Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 			set PHP_SDK_VC_DIR=%%b\VC
 		)
 		if not exist "!PHP_SDK_VC_DIR!" (
 			rem check for a preview release
-			for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -prerelease -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath -format text') do (
+			for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -prerelease -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 				set PHP_SDK_VC_DIR=%%b\VC
 			)
 			if not exist "!PHP_SDK_VC_DIR!" (
@@ -105,13 +139,15 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 	)
 	set VSCMD_ARG_no_logo=nologo
 )
+set APPEND=
 set TMPKEY=
 set PHP_SDK_VS_RANGE=
 
 if 15 gtr %PHP_SDK_VS_NUM% (
 	rem get sdk dir
 	rem if 10.0 is available, it's ok
-	if /i "%PHP_SDK_OS_ARCH%"=="x64" (
+	rem for arch other than x86, use WOW6432
+	if /i not "%PHP_SDK_OS_ARCH%"=="x86" (
 		set TMPKEY=HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v10.0
 	) else (
 		set TMPKEY=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v10.0
@@ -125,7 +161,8 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 	)
 
 	rem Otherwise 8.1 should be available anyway
-	if /i "%PHP_SDK_OS_ARCH%"=="x64" (
+	rem for arch other than x86, use WOW6432
+	if /i not "%PHP_SDK_OS_ARCH%"=="x86" (
 		set TMPKEY=HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Microsoft SDKs\Windows\v8.1
 	) else (
 		set TMPKEY=HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Microsoft SDKs\Windows\v8.1
@@ -143,18 +180,28 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 )
 
 if /i "%PHP_SDK_ARCH%"=="x64" (
-	if 15 gtr %PHP_SDK_VS_NUM% (
-		set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" amd64
-	) else (
-		set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" amd64
-	)
+	set TARGET_ARCH_NAME=amd64
 ) else (
-	if 15 gtr %PHP_SDK_VS_NUM% (
-		set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" x86
-	) else (
-		set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" x86
-	)
+	set TARGET_ARCH_NAME=%PHP_SDK_ARCH%
 )
+
+if /i "%PHP_SDK_OS_ARCH%"=="x64" (
+	set HOST_ARCH_NAME=amd64
+) else (
+	set HOST_ARCH_NAME=%PHP_SDK_ARCH%
+)
+
+if "%HOST_ARCH_NAME%"=="%TARGET_ARCH_NAME%" (
+	set VCVARSALL_ARCH_NAME=%HOST_ARCH_NAME%
+) else (
+	set VCVARSALL_ARCH_NAME=%HOST_ARCH_NAME%_%TARGET_ARCH_NAME%
+)
+if 15 gtr %PHP_SDK_VS_NUM% (
+	set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+) else (
+	set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+)
+set VCVARSALL_ARCH_NAME=
 
 rem echo Visual Studio VC path %PHP_SDK_VC_DIR%
 rem echo Windows SDK path %PHP_SDK_WIN_SDK_DIR%
