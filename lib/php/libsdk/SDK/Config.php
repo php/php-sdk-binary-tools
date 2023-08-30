@@ -7,10 +7,10 @@ use SDK\Build\Dependency\Fetcher;
 class Config
 {
 	/* Config variables. */
-	protected static $depsHost = 'windows.php.net';
+	protected static $depsHost = 'downloads.php.net';
 	protected static $depsPort = 443;
 	protected static $depsUriScheme = "https";
-	protected static $depsBaseUri = "/downloads/php-sdk/deps";
+	protected static $depsBaseUri = "/~windows/php-sdk/deps";
 
 	/* protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; */
 
