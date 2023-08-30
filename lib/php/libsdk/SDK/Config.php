@@ -146,6 +146,7 @@ class Config
 			$fetcher = new Fetcher(self::$depsHost, self::$depsPort, self::$depsUriScheme);
 
 			$tmp = $fetcher->getByUri(self::$depsBaseUri . "/series/");
+			var_dump($tmp);
 			if (false !== $tmp) {
 				$data = array();
 				if (preg_match_all(",/packages-(.+)-(v[cs]\d+)-(x86|x64|arm64)-(stable|staging)\.txt,U", $tmp, $m, PREG_SET_ORDER)) {
@@ -179,6 +180,7 @@ class Config
 
 	public static function setCurrentBranchName(string $name) : void
 	{/*{{{*/
+		print_r(self::getKnownBranches());
 		if (!array_key_exists($name, self::getKnownBranches())) {
 			throw new Exception("Unsupported branch '$name'");
 		}
