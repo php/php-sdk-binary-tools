@@ -7,10 +7,10 @@ use SDK\Build\Dependency\Fetcher;
 class Config
 {
 	/* Config variables. */
-	protected static $depsHost = 'windows.php.net';
+	protected static $depsHost = 'downloads.php.net';
 	protected static $depsPort = 443;
 	protected static $depsUriScheme = "https";
-	protected static $depsBaseUri = "/downloads/php-sdk/deps";
+	protected static $depsBaseUri = "/~windows/php-sdk/deps";
 
 	/* protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; */
 
@@ -148,7 +148,7 @@ class Config
 			$tmp = $fetcher->getByUri(self::$depsBaseUri . "/series/");
 			if (false !== $tmp) {
 				$data = array();
-				if (preg_match_all(",/packages-(.+)-(v[cs]\d+)-(x86|x64|arm64)-(stable|staging)\.txt,U", $tmp, $m, PREG_SET_ORDER)) {
+				if (preg_match_all(",packages-(.+)-(v[cs]\d+)-(x86|x64|arm64)-(stable|staging)\.txt,Us", $tmp, $m, PREG_SET_ORDER)) {
 					foreach ($m as $b) {
 						if (!isset($data[$b[1]])) {
 							$data[$b[1]] = array();
