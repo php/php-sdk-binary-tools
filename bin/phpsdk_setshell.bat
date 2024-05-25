@@ -55,6 +55,9 @@ if "%PHP_SDK_ARCH%"=="" (
 	goto out_error
 )
 
+set TOOLSET=
+if NOT "%3"=="" SET TOOLSET=%3 
+
 rem check OS arch
 rem todo: allow user choose host sdk arch (i.e. x64 target can be compiled at x64(native) or x86(cross))
 for /f "usebackq tokens=1*" %%i in (`wmic cpu get Architecture /value /format:table ^| findstr /r "[1234567890][1234567890]*"`) do (
@@ -119,16 +122,18 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 	if /i "%PHP_SDK_OS_ARCH%"=="arm64" (
 		set APPEND=ARM64
 	)
-	for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
+	set VS_VERSION_ARGS="-latest"
+	if "%TOOLSET%"=="" set VS_VERSION_ARGS=-version !PHP_SDK_VS_RANGE!
+	for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo !VS_VERSION_ARGS! -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 		set PHP_SDK_VC_DIR=%%b\VC
 	)
 	if not exist "!PHP_SDK_VC_DIR!" (
-		for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -products Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
+		for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo !VS_VERSION_ARGS! -products Microsoft.VisualStudio.Product.BuildTools -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 			set PHP_SDK_VC_DIR=%%b\VC
 		)
 		if not exist "!PHP_SDK_VC_DIR!" (
 			rem check for a preview release
-			for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo -version !PHP_SDK_VS_RANGE! -prerelease -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
+			for /f "tokens=1* delims=: " %%a in ('%~dp0\vswhere -nologo !VS_VERSION_ARGS! -prerelease -requires Microsoft.VisualStudio.Component.VC.Tools.!APPEND! -property installationPath -format text') do (
 				set PHP_SDK_VC_DIR=%%b\VC
 			)
 			if not exist "!PHP_SDK_VC_DIR!" (
@@ -199,9 +204,17 @@ if "%HOST_ARCH_NAME%"=="%TARGET_ARCH_NAME%" (
 	set VCVARSALL_ARCH_NAME=%HOST_ARCH_NAME%_%TARGET_ARCH_NAME%
 )
 if 15 gtr %PHP_SDK_VS_NUM% (
-	set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+    if NOT "%TOOLSET%"=="" (
+        set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" !VCVARSALL_ARCH_NAME! -vcvars_ver=%TOOLSET%
+    ) else (
+        set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+    )
 ) else (
-	set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+    if NOT "%TOOLSET%"=="" (
+        set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" !VCVARSALL_ARCH_NAME! -vcvars_ver=%TOOLSET%
+    ) else (
+        set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
+    )
 )
 set VCVARSALL_ARCH_NAME=
 

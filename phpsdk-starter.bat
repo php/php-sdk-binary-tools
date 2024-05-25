@@ -14,6 +14,7 @@ set PHP_SDK_ROOT_PATH=%PHP_SDK_ROOT_PATH:~0,-1%
 if /i "%1" equ "-h" goto help
 if /i "%1" equ "-c" set CRT=%2 & shift
 if /i "%1" equ "-a" set ARCH=%2 & shift
+if /i "%1" equ "-s" set TOOLSET=%2 & shift
 if /i "%1" equ "-t" set TASK=%2 & shift
 if /i "%1" equ "--task-args" set TASK_ARGS=%2 & shift
 shift
@@ -37,7 +38,7 @@ set PHP_SDK_RUN_FROM_ROOT=1
 
 title PHP SDK %CRT% %ARCH%
 
-call %PHP_SDK_ROOT_PATH%\bin\phpsdk_setshell.bat %CRT% %ARCH%
+call %PHP_SDK_ROOT_PATH%\bin\phpsdk_setshell.bat %CRT% %ARCH% %TOOLSET%
 
 set PHP_SDK_RUN_FROM_ROOT=
 set CRT=
