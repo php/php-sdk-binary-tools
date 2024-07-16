@@ -206,3 +206,25 @@ previously.
 - `7za` should be preferred over `unzip` and `zip` for compatibility reasons.
 - If you experience some strange crashes on MSYS2 tools, try the phpsdk_rebase_msys2 tool. MSYS2 tools might be have unstable
   on ASLR enabled systems.
+
+# Internal notes
+
+## Releases
+
+Users of the PHP SDK are supposed to use tagged versions for stability and
+reproducability.  This requires the maintainers of the PHP SDK to create such
+tags for *all* *relevant* *changes*.  The tag format should be `php-sdk-X.Y.Z`,
+with the common major, minor and revision numbers.
+
+Comprehensive changes, which would be hard to test extensively, such as updates
+to the bundled PHP or the MinGW tools, should walk through a QA (aka. pre-release)
+process, typically with beta versions (e.g. `php-sdk-X.Y.Zbeta1`).  Only after
+these have been thoroughly tested, and all relevant issues have been resolved,
+a GA release should be tagged.
+
+After each tag, a couple of other repositories should be informed about the
+available update, ideally in form of a pull request.  These repositories are:
+
+* https://github.com/php/php-src (for Windows CI)
+* https://github.com/php/php-windows-builder
+* https://github.com/php/setup-php-sdk
