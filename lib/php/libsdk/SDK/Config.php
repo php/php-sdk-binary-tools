@@ -180,7 +180,9 @@ class Config
 	public static function setCurrentBranchName(string $name) : void
 	{/*{{{*/
 		if (!array_key_exists($name, self::getKnownBranches())) {
-			throw new Exception("Unsupported branch '$name'");
+			fwrite(STDERR, "Unsupported branch '$name'. Falling back to 'master'.");
+
+			$name = 'master';
 		}
 
 		self::$currentBranchName = $name;
