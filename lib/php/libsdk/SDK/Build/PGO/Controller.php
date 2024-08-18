@@ -52,7 +52,6 @@ class Controller
 		switch ($cmd) {
 			default:
 				throw new Exception("Unknown action '{$cmd}'.");
-				break;
 			case "check_init":
 				$cnf = new PGOConfig(PGOConfig::MODE_CHECK_INIT);
 				break;
@@ -80,7 +79,6 @@ class Controller
 		switch ($this->cmd) {
 			default:
 				throw new Exception("Unknown action '{$this->cmd}'.");
-				break;
 			case "init":
 				$lk = new Lock("pgo_init");
 				if (!$lk->locked()) {
