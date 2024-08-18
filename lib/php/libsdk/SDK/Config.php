@@ -264,6 +264,7 @@ class Config
 			throw new Exception("Unknown branch '$current_branch_name'");
 		}
 
+		$crt = null;
 		$cur_crt = Config::getCurrentCrtName();
 		if (count($branches[$current_branch_name]) > 1) {
 			if (NULL === $cur_crt) {
