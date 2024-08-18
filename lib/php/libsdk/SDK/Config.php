@@ -28,7 +28,7 @@ class Config
 		return self::$depsHost;
 	}/*}}}*/
 
-	public static function getDepsPort() : string
+	public static function getDepsPort() : int
 	{/*{{{*/
 		return self::$depsPort;
 	}/*}}}*/
