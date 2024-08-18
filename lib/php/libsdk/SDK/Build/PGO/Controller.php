@@ -242,7 +242,7 @@ class Controller
 		}
 		echo "\nStarting up PGO environment.\n\n";
 
-		foreach ($this->vitalizeSrv("all") as $srv) {
+		foreach ($this->vitalizeSrv() as $srv) {
 			$srv->up();
 			echo "\n";
 		}
@@ -260,7 +260,7 @@ class Controller
 		/* XXX check it was started of course. */
 		echo "\nShutting down PGO environment.\n\n";
 
-		foreach ($this->vitalizeSrv("all") as $srv) {
+		foreach ($this->vitalizeSrv() as $srv) {
 			$srv->down($force);
 			echo "\n";
 		}

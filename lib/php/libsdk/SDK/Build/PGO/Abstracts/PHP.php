@@ -98,7 +98,7 @@ abstract class PHP
 	public function getVersion(bool $short = false) : string
 	{
 		$ret = NULL;
-		$cli = new CLI($this->conf, $this->scenario);
+		$cli = new CLI($this->conf);
 
 		$out = shell_exec($cli->getExeFilename() . " -n -v");
 
@@ -121,7 +121,7 @@ abstract class PHP
 
 	public function isThreadSafe() : bool
 	{
-		$cli = new CLI($this->conf, $this->scenario);
+		$cli = new CLI($this->conf);
 
 		$out = shell_exec($cli->getExeFilename() . " -n -v");
 
