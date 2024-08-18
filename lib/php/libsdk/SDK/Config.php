@@ -146,7 +146,7 @@ class Config
 			$fetcher = new Fetcher(self::$depsHost, self::$depsPort, self::$depsUriScheme);
 
 			$tmp = $fetcher->getByUri(self::$depsBaseUri . "/series/");
-			if (false !== $tmp) {
+			if ("" !== $tmp) {
 				$data = array();
 				if (preg_match_all(",packages-(.+)-(v[cs]\d+)-(x86|x64|arm64)-(stable|staging)\.txt,Us", $tmp, $m, PREG_SET_ORDER)) {
 					foreach ($m as $b) {
