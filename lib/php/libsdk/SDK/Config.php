@@ -12,7 +12,7 @@ class Config
 	protected static $depsUriScheme = "https";
 	protected static $depsBaseUri = "/~windows/php-sdk/deps";
 
-	/* protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; */
+	protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; // experimental?
 
 	protected static $knownBranches = array ();
 
