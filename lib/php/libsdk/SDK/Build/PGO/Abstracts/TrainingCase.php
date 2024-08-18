@@ -3,9 +3,10 @@
 namespace SDK\Build\PGO\Abstracts;
 
 use SDK\FileOps;
+use SDK\Build\PGO\Interfaces;
 use SDK\Build\PGO\Tool;
 
-abstract class TrainingCase
+abstract class TrainingCase implements Interfaces\TrainingCase
 {
 	use FileOps;
 
