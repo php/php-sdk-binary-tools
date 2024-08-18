@@ -15,6 +15,9 @@ abstract class TrainingCase
 	protected $stat = array();
 	/** @var \SDK\Build\PGO\Config */
 	protected $conf;
+	protected $php;
+
+	abstract public function getName() : string;
 
 	public function getType() : string
 	{

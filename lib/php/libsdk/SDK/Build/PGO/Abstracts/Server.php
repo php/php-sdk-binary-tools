@@ -6,6 +6,9 @@ use SDK\Build\PGO\Interfaces;
 
 abstract class Server
 {
+	protected $name;
+	protected $php;
+
 	public function getName() : string
 	{
 		return $this->name;

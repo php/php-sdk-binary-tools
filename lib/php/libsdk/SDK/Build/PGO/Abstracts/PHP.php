@@ -30,6 +30,8 @@ abstract class PHP
 		}
 	}
 
+	abstract public function getExeFilename() : string;
+
 	/* TODO Might be improved. */
 	public function isDist() : bool
 	{
