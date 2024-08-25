@@ -12,4 +12,5 @@ interface Server
 	public function up() : void;
 	public function down(bool $force = false) : void;
 	public function getName() : string;
+	public function getPhp();
 }

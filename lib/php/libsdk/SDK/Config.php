@@ -12,7 +12,7 @@ class Config
 	protected static $depsUriScheme = "https";
 	protected static $depsBaseUri = "/~windows/php-sdk/deps";
 
-	/* protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; */
+	protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; // experimental?
 
 	protected static $knownBranches = array ();
 
@@ -28,7 +28,7 @@ class Config
 		return self::$depsHost;
 	}/*}}}*/
 
-	public static function getDepsPort() : string
+	public static function getDepsPort() : int
 	{/*{{{*/
 		return self::$depsPort;
 	}/*}}}*/
@@ -264,6 +264,7 @@ class Config
 			throw new Exception("Unknown branch '$current_branch_name'");
 		}
 
+		$crt = null;
 		$cur_crt = Config::getCurrentCrtName();
 		if (count($branches[$current_branch_name]) > 1) {
 			if (NULL === $cur_crt) {

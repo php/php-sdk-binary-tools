@@ -52,7 +52,6 @@ class Controller
 		switch ($cmd) {
 			default:
 				throw new Exception("Unknown action '{$cmd}'.");
-				break;
 			case "check_init":
 				$cnf = new PGOConfig(PGOConfig::MODE_CHECK_INIT);
 				break;
@@ -80,7 +79,6 @@ class Controller
 		switch ($this->cmd) {
 			default:
 				throw new Exception("Unknown action '{$this->cmd}'.");
-				break;
 			case "init":
 				$lk = new Lock("pgo_init");
 				if (!$lk->locked()) {
@@ -242,7 +240,7 @@ class Controller
 		}
 		echo "\nStarting up PGO environment.\n\n";
 
-		foreach ($this->vitalizeSrv("all") as $srv) {
+		foreach ($this->vitalizeSrv() as $srv) {
 			$srv->up();
 			echo "\n";
 		}
@@ -260,7 +258,7 @@ class Controller
 		/* XXX check it was started of course. */
 		echo "\nShutting down PGO environment.\n\n";
 
-		foreach ($this->vitalizeSrv("all") as $srv) {
+		foreach ($this->vitalizeSrv() as $srv) {
 			$srv->down($force);
 			echo "\n";
 		}

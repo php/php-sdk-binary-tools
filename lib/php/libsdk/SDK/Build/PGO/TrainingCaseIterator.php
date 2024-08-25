@@ -50,6 +50,7 @@ class TrainingCaseIterator implements \Iterator
 		return $base . DIRECTORY_SEPARATOR . "TrainingCaseHandler.php";
 	}
 
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		$base = $this->items[$this->idx];
@@ -73,21 +74,25 @@ class TrainingCaseIterator implements \Iterator
 		return $this->el;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		$this->idx++;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function rewind()
 	{
 		$this->idx = 0;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function valid()
 	{
 		return $this->idx < count($this->items);
 	}
 
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		if (!is_object($this->el)) {

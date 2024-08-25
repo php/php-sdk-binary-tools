@@ -90,6 +90,7 @@ trait FileOps
 
 			if ($item->isFile()) {
 				if (!call_user_func($cb, $src_path, $dst_path)) {
+					assert(is_string($cb));
 					throw new Exception("Unable to $cb '$src_path' to '$dst_path'");
 				}
 			}
