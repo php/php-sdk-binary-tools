@@ -4,12 +4,21 @@ namespace SDK\Build\PGO;
 
 use SDK\Build\PGO\Config as PGOConfig;
 
-
+/**
+ * @implements \Iterator<?string,Interfaces\TrainingCase>
+ */
 class TrainingCaseIterator implements \Iterator
 {
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var array<string> */
 	protected $items = array();
+
+	/** @var int */
 	protected $idx;
+
+	/** @var object */
 	protected $el;
 
 	public function __construct(PGOConfig $conf)

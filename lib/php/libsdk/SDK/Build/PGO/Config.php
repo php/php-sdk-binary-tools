@@ -11,11 +11,22 @@ class Config
 	const MODE_REINIT = 2; /* currently unused */
 	const MODE_CHECK_INIT = 3;
 
+	/** @var int */
 	protected $mode;
+
+	/** @var int */
 	protected $last_port = 8081;
+
+	/** @var array<string,mixed> */
 	protected $sections = array();
+
+	/** @var string */
 	protected $scenario = "default";
+
+	/** @var array<mixed> */
 	protected $tpl_vars = array();
+
+	/** @var array<mixed> */
 	protected $srv = array();
 
 	public function __construct(int $mode = self::MODE_RUN)
@@ -67,6 +78,7 @@ class Config
 		}
 	}
 
+	/** @return bool */
 	public function isInitialized()
 	{
 		/* XXX Could be some better check. */
@@ -161,6 +173,7 @@ class Config
 		return $ret;
 	}
 
+	/** @param string ...$args */
 	public function sectionItemExists(...$args) : bool
 	{
 		$i = 0;
@@ -178,6 +191,10 @@ class Config
 		return $i == count($args);
 	}
 
+	/**
+	 * @param string  ...$args
+	 * @return mixed
+	 */
 	public function getSectionItem(...$args)
 	{
 		$i = 0;
@@ -199,6 +216,7 @@ class Config
 		return $it;
 	}
 
+	/** @param string|int ...$args */
 	public function setSectionItem(...$args) : void
 	{
 		$val = array_pop($args);
@@ -238,6 +256,7 @@ class Config
 		}
 	}
 
+	/** @param string ...$args */
 	public function buildTplVarName(...$args) : string
 	{
 		$tpl_k = array("PHP_SDK_PGO");
@@ -249,6 +268,7 @@ class Config
 		return implode("_", $tpl_k);
 	}
 
+	/** @param array<string,mixed> $section */
 	protected function importTplVars(string $section_name, array $section) : void
 	{
 		foreach($section as $k0 => $v0) {
@@ -266,6 +286,7 @@ class Config
 		}	
 	}
 
+	/** @param array<mixed> $additional_vars */
 	public function processTpl(string $s, array $additional_vars = array()) : string
 	{
 		$vars = array_merge($this->tpl_vars, $additional_vars);
@@ -275,6 +296,7 @@ class Config
 		return $s;
 	}
 
+	/** @param array<mixed> $additional_vars */
 	public function processTplFile(string $tpl_fn, string $dst_fn, array $additional_vars = array()) : void
 	{
 		if (!file_exists($tpl_fn)) {
@@ -293,6 +315,7 @@ class Config
 		}
 	}
 
+	/** @return string */
 	public function getWorkSectionsFilename()
 	{
 		return $this->getWorkDir() . DIRECTORY_SEPARATOR . "phpsdk_pgo.json";
@@ -338,6 +361,10 @@ class Config
 		return getenv("PHP_SDK_PHP_CMD");
 	}
 
+	/**
+	 * @param Interfaces\Server $item
+	 * @return void
+	 */
 	public function addSrv($item) : void
 	{
 		$name = strtolower($item->getName());
@@ -350,6 +377,7 @@ class Config
 		$this->srv[$name] = $item;
 	}
 
+	/** @return array<string,Interfaces\Server>|Interfaces\Server|null */
 	public function getSrv(?string $name = NULL)
 	{
 		$ret = NULL;

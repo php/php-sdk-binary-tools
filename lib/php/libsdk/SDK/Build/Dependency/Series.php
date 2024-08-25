@@ -8,10 +8,19 @@ use SDK\Exception;
 
 class Series
 {
+	/** @var ?Fetcher */
 	protected $fetcher;
+
+	/** @var string */
 	protected $stability;
+
+	/** @var string */
 	protected $arch;
+
+	/** @var string */
 	protected $rawData;
+
+	/** @var Cache */
 	protected $cache;
 
 	public function __construct(string $stability, string $arch, Cache $cache, Fetcher $fetcher = NULL)
@@ -59,6 +68,7 @@ class Series
 		return "$base/series/$file";
 	}/*}}}*/
 
+	/** @return array<string>|string */
 	public function getData(bool $raw = false, bool $cache = true)
 	{/*{{{*/
 		if ($cache && $this->rawData) {

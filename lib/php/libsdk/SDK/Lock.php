@@ -4,10 +4,19 @@ namespace SDK;
 
 class Lock
 {
+	/** @var ?resource */
 	protected $fd;
+
+	/** @var string */
 	protected $fn;
+
+	/** @var bool */
 	protected $locked = false;
+
+	/** @var bool|int */
 	protected $wouldBlock = false;
+
+	/** @var bool|int */
 	protected $shared = false;
 
 	public function __construct(string $tag, bool $auto = true, bool $autoShared = false)

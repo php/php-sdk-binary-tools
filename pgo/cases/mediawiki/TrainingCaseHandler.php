@@ -11,9 +11,16 @@ use SDK\Build\PGO\Tool;
 
 class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\TrainingCase
 {
+	/** @var string */
 	protected $base;
+
+	/** @var ?Interfaces\Server $nginx */
 	protected $nginx;
+
+	/** @var mixed */
 	protected $php;
+
+	/** @var int */
 	protected $max_runs = 4;
 
 	public function __construct(Config $conf, ?Interfaces\Server $nginx, ?Interfaces\Server\DB $srv_db)
@@ -82,6 +89,7 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 		$php->exec($cmd);
 	}
 
+	/** @return void */
 	public function setupUrls()
 	{
 		$this->nginx->up();

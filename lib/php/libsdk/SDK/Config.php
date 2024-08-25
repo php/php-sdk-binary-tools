@@ -7,20 +7,40 @@ use SDK\Build\Dependency\Fetcher;
 class Config
 {
 	/* Config variables. */
+
+	/** @var string */
 	protected static $depsHost = 'downloads.php.net';
+
+	/** @var int */
 	protected static $depsPort = 443;
+
+	/** @var string */
 	protected static $depsUriScheme = "https";
+
+	/** @var string */
 	protected static $depsBaseUri = "/~windows/php-sdk/deps";
 
+	/** @var string */
 	protected static $sdkNugetFeedUrl = "http://127.0.0.1/sdk/nuget"; // experimental?
 
+	/** @var array<mixed> */
 	protected static $knownBranches = array ();
 
 	/* Helper props and methods. */
+
+	/** @var ?string */
 	protected static $currentBranchName = NULL;
+
+	/** @var ?string */
 	protected static $currentArchName = NULL;
+
+	/** @var ?string */
 	protected static $currentCrtName = NULL;
+
+	/** @var ?string */
 	protected static $currentStabilityName = NULL;
+
+	/** @var ?string */
 	protected static $depsLocalPath = NULL;
 
 	public static function getDepsHost() : string
@@ -134,6 +154,7 @@ class Config
 		return self::$currentStabilityName;
 	}	/*}}}*/
 
+	/** @return array<mixed> */
 	public static function getKnownBranches() : array
 	{/*{{{*/
 		if (empty(self::$knownBranches)) {
@@ -254,6 +275,7 @@ class Config
 		return self::$currentBranchName;
 	}/*}}}*/
 
+	/** @return array<mixed> */
 	public static function getCurrentBranchData() : array
 	{/*{{{*/
 		$ret = array();

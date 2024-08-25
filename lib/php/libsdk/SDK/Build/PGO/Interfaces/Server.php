@@ -12,5 +12,7 @@ interface Server
 	public function up() : void;
 	public function down(bool $force = false) : void;
 	public function getName() : string;
+
+	/** @return \SDK\Build\PGO\Interfaces\PHP */
 	public function getPhp();
 }

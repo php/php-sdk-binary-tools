@@ -7,13 +7,25 @@ use SDK\{Config as SDKConfig, Exception};
 
 abstract class PHP
 {
+	/** @var string */
 	protected $php_root;
+
+	/** @var string */
 	protected $php_ext_root;
+
+	/** @var string */
 	protected $opcache_file_cache;
+
+	/** @var string */
 	protected $id;
+
+	/** @var string */
 	protected $scenario;
+
+	/** @var \SDK\Build\PGO\Config */
 	protected $conf;
 
+	/** @return void */
 	protected function setupPaths()
 	{
 		$this->php_root = $this->getRootDir();
@@ -38,6 +50,7 @@ abstract class PHP
 		return !file_exists("Makefile") && file_exists("php.exe");
 	}
 
+	/** @return array<string,string> */
 	protected function createEnv() : array
 	{
 		$env = getenv();
@@ -133,6 +146,7 @@ abstract class PHP
 	}
 
 	/* Need to cleanup it somewhere. */
+	/** @return string */
 	public function getIniFilename()
 	{
 		$ret = tempnam(sys_get_temp_dir(), "ini");
@@ -165,6 +179,7 @@ abstract class PHP
 		return $ret;
 	}
 
+	/** @return string */
 	protected function getIniTplFilename()
 	{
 		$tpl_path = $this->conf->getTplDir("php");
@@ -180,6 +195,7 @@ abstract class PHP
 		return $construct;
 	}
 
+	/** @param array<string,string> $extra_env */
 	public function exec(string $php_cmd, string $args = NULL, array $extra_env = array()) : int
 	{
 		$env = $this->createEnv();

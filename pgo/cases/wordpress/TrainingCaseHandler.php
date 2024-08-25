@@ -11,10 +11,19 @@ use SDK\Build\PGO\Tool;
 
 class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\TrainingCase
 {
+	/** @var string */
 	protected $base;
+
+	/** @var ?Interfaces\Server $nginx */
 	protected $nginx;
+
+	/** @var ?Interfaces\Server\DB */
 	protected $maria;
+
+	/** @var mixed */
 	protected $php;
+
+	/** @var int */
 	protected $max_runs = 4;
 
 	public function __construct(Config $conf, ?Interfaces\Server $nginx, ?Interfaces\Server\DB $maria)
@@ -106,6 +115,7 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 
 	}
 
+	/** @return void */
 	public function setupUrls()
 	{
 		$this->maria->up();

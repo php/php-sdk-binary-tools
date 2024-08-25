@@ -12,9 +12,16 @@ class PostgreSQL extends Server implements DB
 {
 	use FileOps;
 
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var string */
 	protected $base;
+
+	/** @var string */
 	protected $data_dir;
+
+	/** @var string */
 	protected $name = "PostgreSQL";
 
 	public function __construct(PGOConfig $conf)
@@ -24,6 +31,7 @@ class PostgreSQL extends Server implements DB
 		$this->data_dir = $this->base . DIRECTORY_SEPARATOR . "data";
 	}
 
+	/** @return void */
 	protected function setupDist()
 	{
 		$user = $this->conf->getSectionItem($this->name, "user");

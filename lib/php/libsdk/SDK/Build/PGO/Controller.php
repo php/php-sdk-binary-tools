@@ -13,11 +13,19 @@ use SDK\Build\PGO\Tool\{PGO, PackageWorkman};
 
 class Controller
 {
+	/** @var string */
 	protected $cmd;
+
+	/** @var ?string */
 	protected $scenario;
+
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var array<string>|null */
 	protected $cases;
 
+	/** @param array<string>|null $cases */
 	public function __construct(string $cmd, ?string $scenario, ?array $cases)
 	{
 		$this->cmd = $cmd;
@@ -29,6 +37,7 @@ class Controller
 		$this->cases = $cases;
 	}
 
+	/** @return mixed */
 	protected function vitalizeSrv()
 	{
 		$all = $this->conf->getSrv("all");
@@ -47,6 +56,10 @@ class Controller
 		return $all;
 	}
 
+	/**
+	 * @param string $cmd
+	 * @return PGOConfig
+	 */
 	protected function setupConfig($cmd)
 	{
 		switch ($cmd) {
@@ -68,6 +81,10 @@ class Controller
 		return $cnf;
 	}
 
+	/**
+	 * @param bool $force
+	 * @return void
+	 */
 	public function handle($force)
 	{
 		/*$mode = (int)("init" !== $this->cmd);
@@ -146,6 +163,7 @@ class Controller
 		}
 	}
 
+	/** @return void */
 	public function init(bool $force = false)
 	{
 		echo "\nInitializing PGO training environment.\n\n";
@@ -179,11 +197,13 @@ class Controller
 		echo "PGO training environment Initialization complete.\n";
 	}
 
+	/** @return bool */
 	public function isInitialized()
 	{
 		return $this->conf->isinitialized();
 	}
 
+	/** @return void */
 	public function train()
 	{
 		if (!$this->isInitialized()) {
@@ -232,6 +252,7 @@ class Controller
 		echo "PGO training complete.\n";
 	}
 
+	/** @return void */
 	public function up()
 	{
 
@@ -250,6 +271,7 @@ class Controller
 		echo "The PGO environment is up.\n";
 	}
 
+	/** @return void */
 	public function down(bool $force = false)
 	{
 		if (!$this->isInitialized()) {

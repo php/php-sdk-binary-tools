@@ -8,8 +8,13 @@ use SDK\Build\PGO\Interfaces;
 
 class PGO
 {
+	/** @var Interfaces\PHP */
 	protected $php;
+
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var int */
 	protected $idx = 0;
 
 	public function __construct(PGOConfig $conf, Interfaces\PHP $php)
@@ -34,6 +39,7 @@ class PGO
 		return $dn . DIRECTORY_SEPARATOR . $bn . ".pgd";
 	}
 
+	/** @return array<string> */
 	protected function getWorkItems() : array
 	{
 		$exe = glob($this->php->getRootDir() . DIRECTORY_SEPARATOR . "*.exe");

@@ -9,5 +9,10 @@ interface HTTP extends Interfaces\Server
 {
 	public function __construct(Config $conf, Interfaces\PHP $php);
 	public function getPhp() : Interfaces\PHP;
+
+	/**
+	 * @param array<mixed> $tpl_vars
+	 * @return void
+	 */
 	public function addServer(string $part_tpl_fn, array $tpl_vars = array());
 }

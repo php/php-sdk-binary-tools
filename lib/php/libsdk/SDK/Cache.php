@@ -4,7 +4,10 @@ namespace SDK;
 
 class Cache
 {
+	/** @var string */
 	protected $id;
+
+	/** @var string */
 	protected $hash;
 
 	public function __construct(string $id)

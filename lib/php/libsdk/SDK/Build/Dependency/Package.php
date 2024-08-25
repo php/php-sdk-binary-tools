@@ -8,9 +8,16 @@ class Package
 {
 	use FileOps;
 
+	/** @var string */
 	protected $name;
+
+	/** @var Series */
 	protected $series;
+
+	/** @var Fetcher */
 	protected $fetcher;
+
+	/** @var string */
 	protected $filepath;
 
 	public function __construct(string $name, Series $series, Fetcher $fetcher)

@@ -10,6 +10,7 @@ class PackageWorkman
 {
 	use FileOps;
 
+	/** @var PGOConfig */
 	protected $conf;
 
 	public function __construct(PGOConfig $conf)

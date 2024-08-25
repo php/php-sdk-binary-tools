@@ -8,13 +8,23 @@ class Fetcher
 {
 	use FileOps;
 
+	/** @var string */
 	protected $host;
-	protected $port;
-	protected $stability;
-	protected $arch;
-	protected $series;
-	protected $scheme;
 
+	/** @var int */
+	protected $port;
+
+	/** @var ?string */
+	protected $stability;
+
+	/** @var ?string */
+	protected $arch;
+
+	/** @var Series */
+	protected $series;
+
+	/** @var string */
+	protected $scheme;
 
 	public function __construct(string $host, int $port, string $scheme = "https", string $arch = NULL, string $stability = NULL, Series $series = NULL)
 	{/*{{{*/

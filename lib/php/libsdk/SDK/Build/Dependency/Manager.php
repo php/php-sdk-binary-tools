@@ -8,12 +8,25 @@ class Manager
 {
 	use FileOps;
 
+	/** @var string */
 	protected $stability;
+
+	/** @var string */
 	protected $arch;
+
+	/** @var string */
 	protected $path;
+
+	/** @var Cache */
 	protected $cache;
+
+	/** @var Series */
 	protected $series;
+
+	/** @var Fetcher */
 	protected $fetcher;
+
+	/** @var ?bool */
 	protected $updatesFlag = NULL;
 
 	public function __construct(string $path, string $stability, string $arch)

@@ -13,9 +13,13 @@ abstract class TrainingCase implements Interfaces\TrainingCase
 	const TYPE_WEB = "web";
 	const TYPE_CLI = "cli";
 
+	/** @var array<mixed> */
 	protected $stat = array();
+
 	/** @var \SDK\Build\PGO\Config */
 	protected $conf;
+
+	/** @var mixed */
 	protected $php;
 
 	abstract public function getName() : string;

@@ -8,7 +8,10 @@ use SDK\Build\PGO\Interfaces\TrainingCase;
 
 class Training
 {
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var TrainingCase */
 	protected $t_case;
 
 	public function __construct(PGOConfig $conf, TrainingCase $t_case)
@@ -27,6 +30,7 @@ class Training
 		return $this->t_case;
 	}
 
+	/** @param array<string,mixed> $stat */
 	public function runWeb(int $max_runs, ?array &$stat = array()) : void
 	{
 		$url_list_fn = $this->t_case->getJobFilename();
@@ -105,6 +109,7 @@ class Training
 	}
 
 	/* TODO Extend with number runs. */
+	/** @param array<string,mixed> $stat */
 	public function run(int $max_runs = 1, ?array &$stat = array()) : void
 	{
 		$type = $this->t_case->getType();

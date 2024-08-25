@@ -12,8 +12,13 @@ class MariaDB extends Server implements DB
 {
 	use FileOps;
 
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var string */
 	protected $base;
+
+	/** @var string */
 	protected $name = "MariaDB";
 
 	public function __construct(PGOConfig $conf)
@@ -22,6 +27,7 @@ class MariaDB extends Server implements DB
 		$this->base = $conf->getSrvDir(strtolower($this->name));
 	}
 
+	/** @return void */
 	protected function setupDist()
 	{
 		/* pass */

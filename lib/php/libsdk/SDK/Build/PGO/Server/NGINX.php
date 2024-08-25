@@ -12,9 +12,16 @@ class NGINX extends Abstracts\Server implements Interfaces\Server\HTTP
 {
 	use FileOps;
 
+	/** @var string */
 	protected $name = "NGINX";
+
+	/** @var PGOConfig */
 	protected $conf;
+
+	/** @var string */
 	protected $base;
+
+	/** @var Interfaces\PHP */
 	protected $php;
 
 	public function __construct(PGOConfig $conf, Interfaces\PHP $php)
@@ -125,6 +132,10 @@ class NGINX extends Abstracts\Server implements Interfaces\Server\HTTP
 	}
 
 	/* Use only for init phase! */
+	/**
+	 * @param array<mixed> $tpl_vars
+	 * @return void
+	 */
 	public function addServer(string $part_tpl_fn, array $tpl_vars = array())
 	{
 		if (!file_exists($part_tpl_fn)) {
