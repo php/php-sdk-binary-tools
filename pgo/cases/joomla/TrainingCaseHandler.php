@@ -14,7 +14,7 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 	/** @var string */
 	protected $base;
 
-	/** @var ?Interfaces\Server $nginx */
+	/** @var ?Interfaces\Server\HTTP $nginx */
 	protected $nginx;
 
 	/** @var mixed */
@@ -26,7 +26,7 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 	/** @var int */
 	protected $max_runs = 4;
 
-	public function __construct(Config $conf, ?Interfaces\Server $nginx, ?Interfaces\Server\DB $maria)
+	public function __construct(Config $conf, ?Interfaces\Server\HTTP $nginx, ?Interfaces\Server\DB $maria)
 	{
 		if (!$nginx) {
 			throw new Exception("Invalid NGINX object");
