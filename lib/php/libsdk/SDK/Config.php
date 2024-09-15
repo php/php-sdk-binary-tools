@@ -218,7 +218,7 @@ class Config
 		}
 
 		/* Try to figure out the branch. The worky scenarios are
-			- CWD is in php-src 
+			- CWD is in php-src
 			- phpize is on the path
 			FIXME for the dev package, there should be a php-config utility
 		 */
@@ -251,12 +251,12 @@ class Config
 			/* Verify that we use an available branch name. Master has some
 				version, but no dedicated series. For master, it rather
 				makes sense to use master as branch name. */
-			$git = trim(shell_exec("where git.exe"));
+			$git = trim((string)shell_exec("where git.exe"));
 			if ($git && is_dir(".git")) {
 				$cmd = "\"$git\" branch";
 
 				$ret = trim(shell_exec($cmd));
-				if (preg_match_all(",\*\s+master,", $ret) > 0) {	
+				if (preg_match_all(",\*\s+master,", $ret) > 0) {
 					$branch = "master";
 				}
 			}
@@ -271,7 +271,7 @@ class Config
 			$branch = self::guessCurrentBranchName();
 			self::setCurrentBranchName($branch);
 		}
-	
+
 		return self::$currentBranchName;
 	}/*}}}*/
 
@@ -336,7 +336,7 @@ class Config
 			throw new Exception("Failed to find config with arch '" . self::getCurrentArchName() . "'");
 		}
 
-		return $ret; 
+		return $ret;
 	}/*}}}*/
 
 	public static function getSdkNugetFeedUrl() : string
@@ -391,7 +391,7 @@ class Config
 				self::setDepsLocalPath($tmp);
 			}
 		}
-		
+
 		if (NULL == self::$depsLocalPath) {
 			$tmp = realpath("../deps");
 			if (is_dir($tmp)) {
