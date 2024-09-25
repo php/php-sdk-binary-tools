@@ -212,11 +212,6 @@ class Config
 		$branch = NULL;
 		$found = false;
 
-		$rmtools_branch = getenv("PHP_RMTOOLS_PHP_BUILD_BRANCH");
-		if ("master" == $rmtools_branch) {
-			return "master";
-		}
-
 		/* Try to figure out the branch. The worky scenarios are
 			- CWD is in php-src 
 			- phpize is on the path
