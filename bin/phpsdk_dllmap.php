@@ -65,7 +65,7 @@ foreach ($dirs as $path) {
 			continue;
 		}
 
-		if (!preg_match(",.*-(vc\d+)-(x\d\d)\.zip,", $filename, $m)) {
+		if (!preg_match(",.*-(v[c|s]\d+)-(x\d\d)\.zip,", $filename, $m)) {
 			continue;
 		}
 
