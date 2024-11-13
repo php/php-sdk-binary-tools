@@ -218,7 +218,7 @@ class Config
 		}
 
 		/* Try to figure out the branch. The worky scenarios are
-			- CWD is in php-src 
+			- CWD is in php-src
 			- phpize is on the path
 			FIXME for the dev package, there should be a php-config utility
 		 */
@@ -256,7 +256,7 @@ class Config
 				$cmd = "\"$git\" branch";
 
 				$ret = trim(shell_exec($cmd));
-				if (preg_match_all(",\*\s+master,", $ret) > 0) {	
+				if (preg_match_all(",\*\s+master,", $ret) > 0) {
 					$branch = "master";
 				}
 			}
@@ -271,7 +271,7 @@ class Config
 			$branch = self::guessCurrentBranchName();
 			self::setCurrentBranchName($branch);
 		}
-	
+
 		return self::$currentBranchName;
 	}/*}}}*/
 
@@ -336,7 +336,7 @@ class Config
 			throw new Exception("Failed to find config with arch '" . self::getCurrentArchName() . "'");
 		}
 
-		return $ret; 
+		return $ret;
 	}/*}}}*/
 
 	public static function getSdkNugetFeedUrl() : string
@@ -368,7 +368,7 @@ class Config
 			throw new Exception("Couldn't find the SDK version file.");
 		}
 
-		return file_get_contents($path);
+		return trim(file_get_contents($path));
 	}/*}}}*/
 
 	public static function getDepsLocalPath() : ?string
@@ -391,7 +391,7 @@ class Config
 				self::setDepsLocalPath($tmp);
 			}
 		}
-		
+
 		if (NULL == self::$depsLocalPath) {
 			$tmp = realpath("../deps");
 			if (is_dir($tmp)) {
