@@ -47,22 +47,23 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 
 	protected function getToolFn() : string
 	{
-		return $this->conf->getToolsDir() . DIRECTORY_SEPARATOR . "symfony.phar";
+		return $this->conf->getToolsDir() . DIRECTORY_SEPARATOR . "composer.phar";
 	}
 
 	protected function setupDist() : void
 	{
 		if (!is_dir($this->conf->getCaseWorkDir($this->getName()))) {
 			echo "Setting up in '{$this->base}'\n";
+			$ver = $this->conf->getSectionItem($this->getName(), "symfony_demo_version");
 			$php = new PHP\CLI($this->conf);
-			$php->exec($this->getToolFn() . " demo " . $this->base);
+			$php->exec($this->getToolFn() . " create-project symfony/symfony-demo " . $this->base . " " . $ver);
 		}
 
 		$port = $this->getHttpPort();
 		$host = $this->getHttpHost();
 
 		$vars = array(
-			$this->conf->buildTplVarName($this->getName(), "docroot") => str_replace("\\", "/", $this->base . DIRECTORY_SEPARATOR . "web"),
+			$this->conf->buildTplVarName($this->getName(), "docroot") => str_replace("\\", "/", $this->base . DIRECTORY_SEPARATOR . "public"),
 		);
 		$tpl_fn = $this->conf->getCasesTplDir($this->getName()) . DIRECTORY_SEPARATOR . "nginx.partial.conf";
 		$this->nginx->addServer($tpl_fn, $vars);
@@ -105,8 +106,6 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 
 	public function prepareInit(Tool\PackageWorkman $pw, bool $force = false) : void
 	{
-		$url = $this->conf->getSectionItem($this->getName(), "symfony_phar_url");
-		$pw->fetch($url, $this->getToolFn(), $force);
 	}
 
 	public function init() : void
