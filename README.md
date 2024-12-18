@@ -188,6 +188,20 @@ implemented in the Makefile to start the WinDbg integrated, so it needs to de do
 Either a debug build or a release build with debug symbols is still required, as described
 previously.
 
+## Windows on ARM Builds
+
+To get started building on arm64 either modify one of the existing `phpsdk-vc*.bat` or make a copy and change the `-a` argument to `arm64`
+```
+   @echo off
+
+   call %~dp0phpsdk-starter.bat -c vc15 -a arm64 -s 14.16 %*
+
+   exit /b %ERRORLEVEL%
+```
+
+Most of the deps can be handled quite easily with [vcpkg](https://github.com/microsoft/vcpkg)
+
+
 # Support
 
 - Join `#winphp-dev` on Freenode to discuss any ideas or questions
