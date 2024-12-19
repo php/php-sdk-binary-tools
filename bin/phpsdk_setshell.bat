@@ -60,7 +60,7 @@ if NOT "%3"=="" SET TOOLSET=%3
 
 rem check OS arch
 rem todo: allow user choose host sdk arch (i.e. x64 target can be compiled at x64(native) or x86(cross))
-for /f "usebackq tokens=1*" %%i in (`wmic cpu get Architecture /value /format:table ^| findstr /r "[1234567890][1234567890]*"`) do (
+for /f "usebackq tokens=*" %%i in (`powershell -NoProfile -Command "Get-CimInstance -ClassName Win32_Processor | Select-Object -ExpandProperty Architecture"`) do (
 	set PHP_SDK_OS_ARCH_NUM=%%i
 )
 
