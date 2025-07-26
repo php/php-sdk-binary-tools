@@ -13,4 +13,3 @@ if "%PHP_SDK_PHP_CMD%"=="" (
 call %PHP_SDK_PHP_CMD% %PHP_SDK_BIN_PATH%\phpsdk_deps.php %*
 
 exit /b %errorlevel%
-
