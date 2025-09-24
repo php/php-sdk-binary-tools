@@ -61,6 +61,8 @@ retry:
 				sleep(1);
 				$retries--;
 				goto retry;
+			} else {
+				throw $e;
 			}
 		}
 
