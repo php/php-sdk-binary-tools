@@ -9,8 +9,6 @@ phpmaster
 php
 !lib/php
 !bin/php
-rmtools-client
-rmtools.base
 logs
 PFTT
 \.tmp
@@ -18,7 +16,6 @@ PFTT
 oracle
 # either these two become submodules, or uncomment them
 #pgo-build
-#rmtools*
 phpsdk-local.bat
 pgo/work
 !pgo/tpl/php
