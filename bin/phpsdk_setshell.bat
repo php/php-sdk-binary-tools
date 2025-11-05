@@ -138,6 +138,10 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 			)
 			if not exist "!PHP_SDK_VC_DIR!" (
 				echo Could not determine '%PHP_SDK_VS%' directory
+				set /p PHP_SDK_VC_DIR=Input '%PHP_SDK_VS%' directory:
+			)
+			if not exist "!PHP_SDK_VC_DIR!" (
+				echo Could not determine '%PHP_SDK_VS%' directory
 				goto out_error;
 			)
 		)
