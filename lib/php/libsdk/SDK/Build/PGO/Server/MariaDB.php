@@ -30,7 +30,9 @@ class MariaDB extends Server implements DB
 	/** @return void */
 	protected function setupDist()
 	{
-		/* pass */
+		if (file_exists("$this->base/bin/mariadb-install-db.exe")) {
+			exec("$this->base/bin/mariadb-install-db.exe");
+		}
 	}
 
 	public function prepareInit(PackageWorkman $pw, bool $force = false) : void
