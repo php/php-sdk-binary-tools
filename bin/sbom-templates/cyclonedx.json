@@ -1,0 +1,35 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:{{UUID}}",
+  "version": 1,
+  "metadata": {
+    "timestamp": "{{TIMESTAMP}}",
+    "tools": {
+      "components": [
+        {
+          "type": "application",
+          "name": "php",
+          "version": "{{PHP_VERSION}}"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "{{PHP_REF}}",
+      "name": "php",
+      "version": "{{PHP_VERSION}}",
+      "purl": "{{PHP_REF}}",
+      "cpe": "{{PHP_CPE}}",
+      "licenses": [
+        {
+          "license": {
+            "id": "{{PHP_LICENSE}}"
+          }
+        }
+      ]
+    }
+  },
+  "components": [],
+  "dependencies": []
+}

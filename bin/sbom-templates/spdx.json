@@ -1,0 +1,51 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "php-{{PHP_VERSION}}",
+  "documentNamespace": "https://php.net/sbom/windows/php/{{PHP_VERSION}}/{{UUID}}",
+  "creationInfo": {
+    "created": "{{TIMESTAMP}}",
+    "creators": [
+      "Organization: PHP Group",
+      "Tool: php-{{PHP_VERSION}}"
+    ]
+  },
+  "documentDescribes": [
+    "SPDXRef-PHP"
+  ],
+  "packages": [
+    {
+      "name": "php",
+      "SPDXID": "SPDXRef-PHP",
+      "versionInfo": "{{PHP_VERSION}}",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "{{PHP_LICENSE}}",
+      "licenseDeclared": "{{PHP_LICENSE}}",
+      "copyrightText": "NOASSERTION",
+      "supplier": "Organization: PHP Group",
+      "originator": "Organization: PHP Group",
+      "primaryPackagePurpose": "APPLICATION",
+      "externalRefs": [
+        {
+          "referenceCategory": "PACKAGE-MANAGER",
+          "referenceType": "purl",
+          "referenceLocator": "{{PHP_REF}}"
+        },
+        {
+          "referenceCategory": "SECURITY",
+          "referenceType": "cpe23Type",
+          "referenceLocator": "{{PHP_CPE}}"
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "spdxElementId": "SPDXRef-DOCUMENT",
+      "relationshipType": "DESCRIBES",
+      "relatedSpdxElement": "SPDXRef-PHP"
+    }
+  ]
+}
