@@ -1,0 +1,8 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://php.net/sbom/windows/php/{{PHP_VERSION}}/vex/{{UUID}}",
+  "author": "PHP Group",
+  "timestamp": "{{TIMESTAMP}}",
+  "version": 1,
+  "statements": []
+}

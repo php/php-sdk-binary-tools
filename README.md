@@ -34,6 +34,7 @@ The legacy binary tools SDK is available from the [legacy branch](https://github
 - `phpsdk_buildtree` - initialize the development filesystem structure
 - `phpsdk_deps`      - handle dependency libraries
 - `phpsdk_dllmap`    - create a JSON listing of DLLs contained in zip files
+- `phpsdk_sbom`      - generate compliance files for a PHP binary distribution
 - `phpsdk_pgo`       - run PGO training 
 - `phpsdk_version`   - show SDK version
 - `task.exe`         - wrapper to hide the given command line
