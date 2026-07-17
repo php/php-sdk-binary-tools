@@ -484,6 +484,122 @@ function create_openvex($php_version, $dependency_sbom_files, $dest_file)
     }
 }
 
+function export_sbom_files($artifact_file)
+{
+    $artifact_file = str_replace('\\', '/', $artifact_file);
+    $artifact_name = basename($artifact_file);
+    if (!preg_match('/^php-([0-9].+?)(-nts)?-Win32-(v[sc]\d+)-(x86|x64|arm64)\.zip$/i', $artifact_name, $matches)) {
+        return;
+    }
+    if (!is_file($artifact_file)) {
+        echo "ERROR: PHP archive '$artifact_file' does not exist\n";
+        exit(1);
+    }
+
+    $zip = new ZipArchive();
+    if ($zip->open($artifact_file) !== true) {
+        echo "ERROR: couldn't open PHP archive '$artifact_file'\n";
+        exit(1);
+    }
+    $documents = array();
+    foreach (array('cdx', 'spdx', 'openvex') as $format) {
+        $contents = $zip->getFromName('extras/sbom/php.' . $format . '.json');
+        if ($contents === false) {
+            if ($format === 'openvex') {
+                continue;
+            }
+            $zip->close();
+            echo "ERROR: PHP archive '$artifact_file' does not contain php.$format.json\n";
+            exit(1);
+        }
+        $documents[$format] = $contents;
+    }
+    $zip->close();
+
+    $artifact_version = $matches[1];
+    $thread_safety = $matches[2] === '-nts' ? 'nts' : 'ts';
+    $compiler = $matches[3];
+    $architecture = $matches[4];
+    $directory = preg_match('/^\d+\.\d+\.\d+$/', $artifact_version) ? 'releases' : 'qa';
+    $download_location = 'https://downloads.php.net/~windows/' . $directory . '/' . $artifact_name;
+    $hash = @hash_file('sha256', $artifact_file);
+    if ($hash === false) {
+        echo "ERROR: couldn't hash PHP archive '$artifact_file'\n";
+        exit(1);
+    }
+
+    $cyclonedx = json_decode($documents['cdx'], true);
+    if (!is_array($cyclonedx) || !isset($cyclonedx['metadata']['component'])) {
+        echo "ERROR: couldn't parse CycloneDX SBOM in '$artifact_file'\n";
+        exit(1);
+    }
+    $cyclonedx['metadata']['component']['hashes'] = array(array(
+        'alg' => 'SHA-256',
+        'content' => $hash,
+    ));
+    $cyclonedx['metadata']['component']['externalReferences'] = array(array(
+        'type' => 'distribution',
+        'url' => $download_location,
+    ));
+    $cyclonedx['metadata']['component']['properties'] = array_merge(
+        $cyclonedx['metadata']['component']['properties'] ?? array(),
+        array(
+            array('name' => 'php:artifact-file-name', 'value' => $artifact_name),
+            array('name' => 'php:artifact-download-location', 'value' => $download_location),
+            array('name' => 'php:artifact-architecture', 'value' => $architecture),
+            array('name' => 'php:artifact-thread-safety', 'value' => $thread_safety),
+            array('name' => 'php:artifact-compiler', 'value' => $compiler),
+        )
+    );
+    if (@file_put_contents(
+        $artifact_file . '.cdx.json',
+        json_encode($cyclonedx, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
+    ) === false) {
+        echo "ERROR: couldn't write CycloneDX SBOM for '$artifact_file'\n";
+        exit(1);
+    }
+
+    $spdx = json_decode($documents['spdx'], true);
+    if (!is_array($spdx) || !is_array($spdx['packages'] ?? null)) {
+        echo "ERROR: couldn't parse SPDX SBOM in '$artifact_file'\n";
+        exit(1);
+    }
+    $spdx['documentNamespace'] = $download_location . '.spdx.json';
+    $php_package = null;
+    foreach ($spdx['packages'] as &$package) {
+        if (($package['SPDXID'] ?? null) === 'SPDXRef-PHP') {
+            $php_package = &$package;
+            break;
+        }
+    }
+    if ($php_package === null) {
+        echo "ERROR: SPDX SBOM in '$artifact_file' does not describe SPDXRef-PHP\n";
+        exit(1);
+    }
+    $php_package['packageFileName'] = $artifact_name;
+    $php_package['downloadLocation'] = $download_location;
+    $php_package['checksums'] = array(array(
+        'algorithm' => 'SHA256',
+        'checksumValue' => $hash,
+    ));
+    unset($php_package, $package);
+    if (@file_put_contents(
+        $artifact_file . '.spdx.json',
+        json_encode($spdx, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n"
+    ) === false) {
+        echo "ERROR: couldn't write SPDX SBOM for '$artifact_file'\n";
+        exit(1);
+    }
+
+    if (isset($documents['openvex']) && @file_put_contents(
+        $artifact_file . '.openvex.json',
+        $documents['openvex']
+    ) === false) {
+        echo "ERROR: couldn't write OpenVEX document for '$artifact_file'\n";
+        exit(1);
+    }
+}
+
 function add_dependency_compliance_files($php_version, $php_source_dir, $php_build_dir, $dist_dir)
 {
     $licenses_dir = $php_build_dir . '/share/licenses';
@@ -645,6 +761,15 @@ function add_dependency_compliance_files($php_version, $php_source_dir, $php_bui
     create_cyclonedx_sbom($php_version, $php_license_id, $php_copyright, $source_components, $sbom_files, $dependency_sbom_status, $dist_sbom_dir . '/php.cdx.json');
     create_spdx_sbom($php_version, $php_license_id, $php_copyright, $source_components, $sbom_files, $dependency_sbom_status, $dist_sbom_dir . '/php.spdx.json');
     create_openvex($php_version, $sbom_files, $dist_sbom_dir . '/php.openvex.json');
+}
+
+if (($argv[1] ?? null) === '--export') {
+    if (count($argv) !== 3) {
+        fwrite(STDERR, "Usage: phpsdk_sbom --export <php-archive>\n");
+        exit(2);
+    }
+    export_sbom_files($argv[2]);
+    exit(0);
 }
 
 if (count($argv) !== 5) {
