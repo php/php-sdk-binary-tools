@@ -499,11 +499,12 @@ function export_sbom_files($artifact_file)
 {
     $artifact_file = str_replace('\\', '/', $artifact_file);
     $artifact_name = basename($artifact_file);
-    if (!preg_match('/^php-([0-9].+?)(-nts)?-Win32-(v[sc]\d+)-(x86|x64|arm64)\.zip$/i', $artifact_name, $matches)) {
-        return;
-    }
     if (!is_file($artifact_file)) {
         echo "ERROR: PHP archive '$artifact_file' does not exist\n";
+        exit(1);
+    }
+    if (!preg_match('/^php-([0-9].+?)(-nts)?-Win32-(v[sc]\d+)-(x86|x64|arm64)\.zip$/i', $artifact_name, $matches)) {
+        echo "ERROR: unsupported PHP archive name '$artifact_name'\n";
         exit(1);
     }
 
