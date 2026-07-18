@@ -30,7 +30,25 @@ class MariaDB extends Server implements DB
 	/** @return void */
 	protected function setupDist()
 	{
-		/* pass */
+		$dataDir = $this->base . DIRECTORY_SEPARATOR . "data";
+		if (is_dir($dataDir)) {
+			return;
+		}
+
+		$cwd = getcwd();
+		chdir($this->base);
+
+		$port = (int) $this->conf->getSectionItem($this->name, "port");
+		$pass = $this->conf->getSectionItem($this->name, "pass");
+		$passArg = $pass ? " --password=" . escapeshellarg($pass) : "";
+
+		passthru(".\\bin\\mariadb-install-db.exe --datadir=data --port=$port$passArg 2>&1", $exitCode);
+
+		chdir($cwd);
+
+		if ($exitCode !== 0 || !is_dir($dataDir)) {
+			throw new Exception("Failed to initialize MariaDB.");
+		}
 	}
 
 	public function prepareInit(PackageWorkman $pw, bool $force = false) : void
