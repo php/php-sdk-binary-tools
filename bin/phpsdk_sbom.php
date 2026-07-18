@@ -384,9 +384,20 @@ function create_spdx_sbom($php_version, $php_license_id, $php_copyright, $source
             $package['filesAnalyzed'] = false;
             unset($package['packageVerificationCode'], $package['licenseInfoFromFiles']);
 
-            $package_key_data = $package;
-            unset($package_key_data['SPDXID']);
-            $package_key = json_encode($package_key_data, JSON_UNESCAPED_SLASHES);
+            $package_purl = '';
+            foreach ($package['externalRefs'] ?? array() as $external_ref) {
+                if (($external_ref['referenceType'] ?? '') === 'purl') {
+                    $package_purl = $external_ref['referenceLocator'] ?? '';
+                    break;
+                }
+            }
+            $package_key = json_encode(array(
+                $package['name'],
+                $package['versionInfo'] ?? '',
+                $package['packageFileName'] ?? '',
+                $package['downloadLocation'] ?? '',
+                $package_purl,
+            ), JSON_UNESCAPED_SLASHES);
 
             if (isset($package_ids_by_key[$package_key])) {
                 $dependency_spdx_id = $package_ids_by_key[$package_key];
