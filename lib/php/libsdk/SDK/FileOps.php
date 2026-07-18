@@ -133,8 +133,11 @@ retry:
 
 		curl_setopt($ch, CURLOPT_HEADER, false);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+		if (PHP_OS_FAMILY === "Windows" && defined("CURLSSLOPT_NATIVE_CA")) {
+			curl_setopt($ch, CURLOPT_SSL_OPTIONS, CURLSSLOPT_NATIVE_CA);
+		}
 		curl_setopt($ch, CURLOPT_USERAGENT, Config::getSdkUserAgentName());
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 
