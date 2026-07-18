@@ -1,0 +1,12 @@
+diff --git a/db.php b/db.php
+--- a/db.php
++++ b/db.php
+@@ -97,6 +97,8 @@ class db {
+ 	var $num_queries = 0;	// amount of queries made
+ 	var $rows_affected = 0;	// count of affected rows by previous query
+ 	var $insert_id = 0;		// ID generated for AUTO_INCREMEND column
++	var $num_rows = 0;
++	var $check_current_query = false;
+ 	var $last_query;		// last query made
+ 	var $last_result;		// result of the last query made
+ 	var $result;

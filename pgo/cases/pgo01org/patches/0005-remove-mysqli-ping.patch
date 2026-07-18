@@ -1,0 +1,15 @@
+diff --git a/db.php b/db.php
+--- a/db.php
++++ b/db.php
+@@ -244,7 +244,10 @@ class db {
+ 
+ 	public function check_connection( $allow_bail = true ) {
+ 		if ( $this->use_mysqli ) {
+-			if ( @mysqli_ping( $this->dbhandle ) ) {
++			if (
++				$this->dbhandle instanceof mysqli
++				&& 0 === mysqli_errno( $this->dbhandle )
++			) {
+ 				return true;
+ 			}
+ 		} else {

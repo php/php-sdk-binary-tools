@@ -1,0 +1,25 @@
+diff --git a/db.php b/db.php
+--- a/db.php
++++ b/db.php
+@@ -27,6 +27,10 @@
+  *   Bogdan Andone <bogdan.andone@intel.com>
+  */
+ 
++if (function_exists('mysqli_report')) {
++	mysqli_report(MYSQLI_REPORT_OFF);
++}
++
+ /* Constants for scaling the number of runs;
+  * Users can change these value for tuning execution weights
+  */
+diff --git a/init.php b/init.php
+--- a/init.php
++++ b/init.php
+@@ -149,6 +149,7 @@ function initDB() {
+     $conn->close();
+ }
+ 
++mysqli_report(MYSQLI_REPORT_OFF);
+ initDB();
+ printExistingDB();
+ ?>

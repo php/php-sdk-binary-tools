@@ -54,6 +54,45 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 		return $this->conf->getToolsDir() . DIRECTORY_SEPARATOR . "wp-cli.phar";
 	}
 
+	protected function applyPatch(string $patch) : void
+	{
+		$base_arg = escapeshellarg($this->base);
+		$patch_arg = escapeshellarg($patch);
+		$command = "patch --batch --forward --dry-run -p1 -d $base_arg -i $patch_arg 2>&1";
+		exec($command, $output, $status);
+
+		if (0 === $status) {
+			$output = array();
+			$command = "patch --batch --forward -p1 -d $base_arg -i $patch_arg 2>&1";
+			exec($command, $output, $status);
+			if (0 !== $status) {
+				throw new Exception("Failed to apply patch '" . basename($patch) . "':\n" . implode("\n", $output));
+			}
+			return;
+		}
+
+		$output = array();
+		$command = "patch --batch --reverse --dry-run -p1 -d $base_arg -i $patch_arg 2>&1";
+		exec($command, $output, $status);
+		if (0 !== $status) {
+			throw new Exception("Patch '" . basename($patch) . "' does not apply:\n" . implode("\n", $output));
+		}
+	}
+
+	protected function applyPatches() : void
+	{
+		$patch_dir = $this->conf->getCasesTplDir($this->getName()) . DIRECTORY_SEPARATOR . "patches";
+		$patches = glob($patch_dir . DIRECTORY_SEPARATOR . "*.patch");
+		if (false === $patches || empty($patches)) {
+			throw new Exception("No patches found under '$patch_dir'.");
+		}
+		sort($patches);
+
+		foreach ($patches as $patch) {
+			$this->applyPatch($patch);
+		}
+	}
+
 	protected function setupDist() : void
 	{
 		$cmd_path_arg = "--path=" . $this->base;
@@ -99,24 +138,7 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 		$constants = preg_replace(",define\('DB_HOST'.+,", "define('DB_HOST', '$db_host:$db_port');", $constants);
 		file_put_contents($fl, $constants);
 
-		// work around <https://github.com/Microsoft/php-sdk-binary-tools/issues/51>
-		$fl = $htdocs . DIRECTORY_SEPARATOR . "class.php";
-		$class = file_get_contents($fl);
-		$class = preg_replace(",function Student,", "function __construct", $class);
-		$class = preg_replace(",function Faculty,", "function __construct", $class);
-		file_put_contents($fl, $class);
-
-		// patch <https://github.com/intel/php_pgo_training_scripts/pull/4>
-		$fl = $htdocs . DIRECTORY_SEPARATOR . "standard_calls.php";
-		$standard_calls = file_get_contents($fl);
-		$standard_calls = preg_replace(",parse_str\(\\\$var1\),", "parse_str(\$var1, \$dummy)", $standard_calls);
-		file_put_contents($fl, $standard_calls);
-
-		// patch <https://github.com/intel/php_pgo_training_scripts/pull/5>
-		$fl = $htdocs . DIRECTORY_SEPARATOR . "init.php";
-		$standard_calls = file_get_contents($fl);
-		$standard_calls = preg_replace(",^initDB\(\);$,m", "mysqli_report(MYSQLI_REPORT_OFF);\n$0", $standard_calls);
-		file_put_contents($fl, $standard_calls);
+		$this->applyPatches();
 
 		//$php->exec($cmd, NULL, $env);
 		/* TODO check status or switch to cli. */

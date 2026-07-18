@@ -1,0 +1,21 @@
+diff --git a/class.php b/class.php
+--- a/class.php
++++ b/class.php
+@@ -64,7 +64,7 @@ class Student {
+                                          "set_fac", "get_fac", "print", "set_grades",
+                                          "get_grades", "get_grade", "make_unusable", "to_string");
+ 
+-    function Student() {
++    function __construct() {
+         $this->valid = true;
+         $this->annual_grade = 0.0;
+          Student::$num_instances += 1;
+@@ -153,7 +153,7 @@ class Faculty {
+     var $university_name;
+     var $students = array();
+ 
+-    function Faculty($n, $cty, $ctry, $uname) {
++    function __construct($n, $cty, $ctry, $uname) {
+         $this->name = $n;
+         $this->city = $cty;
+         $this->country = $ctry;

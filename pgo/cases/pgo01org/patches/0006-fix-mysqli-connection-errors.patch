@@ -1,0 +1,9 @@
+diff --git a/init.php b/init.php
+--- a/init.php
++++ b/init.php
+@@ -33 +33 @@ function printExistingDB() {
+-        die("Connection failed: " . $conn->connect);
++        die("Connection failed: " . $conn->connect_error);
+@@ -89 +89 @@ function initDB() {
+-        die("Connection failed: " . $conn->connect);
++        die("Connection failed: " . $conn->connect_error);

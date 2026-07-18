@@ -1,0 +1,12 @@
+diff --git a/standard_calls.php b/standard_calls.php
+--- a/standard_calls.php
++++ b/standard_calls.php
+@@ -104,7 +104,7 @@ function standard_calls() {
+ 		array_walk($test_array, 'do_nothing');
+ 		krsort($test_array);
+ 		ksort($test_array);
+-		parse_str($var1);
++		parse_str($var1, $dummy);
+ 		end($test_array);
+ 		reset($test_array);
+ 		array_shift($test_array);
