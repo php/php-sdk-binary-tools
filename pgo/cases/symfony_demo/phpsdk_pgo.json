@@ -1,5 +1,5 @@
 {
-	"symfony_phar_url": "https://get.symfony.com/symfony.phar",
+	"symfony_demo_version": "v2.4.0",
 	"type": "web",
 	"srv_http": "nginx",
 	"srv_db": null
