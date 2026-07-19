@@ -95,9 +95,9 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 		$cmd = $this->getToolFn() . " core config --force --dbname=" . $this->getName() . " --dbuser=$db_user --dbpass=$db_pass --dbhost=$db_host:$db_port $cmd_path_arg";
 		$php->exec($cmd, NULL, $env);
 
-		$site_adm = trim(shell_exec("pwgen -1 -s 8"));
+		$site_adm = trim((string) shell_exec("pwgen -1 -s 8"));
 		$this->conf->setSectionItem($this->getName(), "site_admin_user", $site_adm);
-		$site_pw = trim(shell_exec("pwgen -1 -s 8"));
+		$site_pw = trim((string) shell_exec("pwgen -1 -s 8"));
 		$this->conf->setSectionItem($this->getName(), "site_admin_pass", $site_pw);
 		//save admin user and pass to config
 		//$cmd = $this->getToolFn() . " core install --url=$http_host:$http_port --title=hello --admin_user=$site_adm_user --admin_password=$site_adm_pw --admin_email=a@bc.de --skip-email --path=" . $this->base;

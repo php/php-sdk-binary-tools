@@ -73,9 +73,9 @@ class TrainingCaseHandler extends Abstracts\TrainingCase implements Interfaces\T
 			unlink($settings);
 		}
 
-		$site_adm = trim(shell_exec("pwgen -1 -s 8"));
+		$site_adm = trim((string) shell_exec("pwgen -1 -s 8"));
 		$this->conf->setSectionItem($this->getName(), "site_admin_user", $site_adm);
-		$site_pw = trim(shell_exec("pwgen -1 -s 8"));
+		$site_pw = trim((string) shell_exec("pwgen -1 -s 8"));
 		$this->conf->setSectionItem($this->getName(), "site_admin_pass", $site_pw);
 
 		$db_dir = $this->conf->getCaseWorkDir($this->getName()) . DIRECTORY_SEPARATOR . "database";

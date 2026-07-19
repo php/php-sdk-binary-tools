@@ -36,12 +36,12 @@ class PostgreSQL extends Server implements DB
 	{
 		$user = $this->conf->getSectionItem($this->name, "user");
 		if (!$user) {
-			$user = trim(shell_exec("pwgen -1 -s 8"));
+			$user = trim((string) shell_exec("pwgen -1 -s 8"));
 			$this->conf->setSectionItem($this->getName(), "user", $user);
 		}
 		$pass = $this->conf->getSectionItem($this->name, "pass");
 		if (!$pass) {
-			$pass = trim(shell_exec("pwgen -1 -s 8"));
+			$pass = trim((string) shell_exec("pwgen -1 -s 8"));
 			$this->conf->setSectionItem($this->getName(), "pass", $pass);
 		}
 

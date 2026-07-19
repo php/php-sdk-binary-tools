@@ -113,7 +113,7 @@ abstract class PHP
 		$ret = NULL;
 		$cli = new CLI($this->conf);
 
-		$out = shell_exec($cli->getExeFilename() . " -n -v");
+		$out = (string) shell_exec($cli->getExeFilename() . " -n -v");
 
 		if ($short) {
 			if (preg_match(",PHP (\d+\.\d+),", $out, $m)) {
@@ -136,7 +136,7 @@ abstract class PHP
 	{
 		$cli = new CLI($this->conf);
 
-		$out = shell_exec($cli->getExeFilename() . " -n -v");
+		$out = (string) shell_exec($cli->getExeFilename() . " -n -v");
 
 		if (preg_match(",NTS,", $out, $m) > 0) {
 			return false;

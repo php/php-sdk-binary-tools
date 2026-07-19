@@ -251,11 +251,11 @@ class Config
 			/* Verify that we use an available branch name. Master has some
 				version, but no dedicated series. For master, it rather
 				makes sense to use master as branch name. */
-			$git = trim(shell_exec("where git.exe"));
+			$git = trim((string) shell_exec("where git.exe"));
 			if ($git && is_dir(".git")) {
 				$cmd = "\"$git\" branch";
 
-				$ret = trim(shell_exec($cmd));
+				$ret = trim((string) shell_exec($cmd));
 				if (preg_match_all(",\*\s+master,", $ret) > 0) {
 					$branch = "master";
 				}
