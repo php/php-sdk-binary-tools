@@ -8,7 +8,7 @@ use SDK\Build\PGO\Tool\PackageWorkman;
 
 interface TrainingCase
 {
-	public function __construct(PGOConfig $conf, ?Server $srv_http, ?Server\DB $srv_db);
+	public function __construct(PGOConfig $conf, ?Server\HTTP $srv_http, ?Server\DB $srv_db);
 
 	/* Name of the training case, usually should be same as dirname and namespace. */
 	public function getName() : string;
@@ -24,4 +24,8 @@ interface TrainingCase
 
 	/* Get training type, it's like "web", "cli", etc.*/
 	public function getType() : string;
+
+	public function getJobFilename() : string;
+
+	public function httpStatusOk(int $status) : bool;
 }
