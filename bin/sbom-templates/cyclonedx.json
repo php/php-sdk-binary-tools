@@ -21,6 +21,9 @@
       "version": "{{PHP_VERSION}}",
       "purl": "{{PHP_REF}}",
       "cpe": "{{PHP_CPE}}",
+      "supplier": {
+        "name": "PHP Group"
+      },
       "licenses": [
         {
           "license": {

@@ -109,6 +109,7 @@ function create_cyclonedx_sbom($php_version, $php_license_id, $php_copyright, $s
             'name' => $component['name'],
             'version' => $component_version,
             'copyright' => 'See accompanying license and notice files.',
+            'supplier' => array('name' => 'PHP Group'),
         );
         if (!empty($component['purl'])) {
             $cyclonedx_component['purl'] = $component['purl'];
