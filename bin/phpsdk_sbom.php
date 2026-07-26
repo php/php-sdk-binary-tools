@@ -613,10 +613,90 @@ function export_sbom_files($artifact_file)
     }
 }
 
-function add_dependency_compliance_files($php_version, $php_source_dir, $php_build_dir, $dist_dir)
+function add_compliance_to_archive($php_source_dir, $php_build_dir, $artifact_file, $source_sbom_file)
+{
+    $artifact_file = str_replace('\\', '/', $artifact_file);
+    $artifact_name = basename($artifact_file);
+    if (!is_file($artifact_file)) {
+        echo "ERROR: PHP archive '$artifact_file' does not exist\n";
+        exit(1);
+    }
+    if (!preg_match('/^php-([0-9].+?)(-nts)?-Win32-v[sc]\d+-(x86|x64|arm64)\.zip$/i', $artifact_name, $matches)) {
+        echo "ERROR: unsupported PHP archive name '$artifact_name'\n";
+        exit(1);
+    }
+
+    $zip = new ZipArchive();
+    if ($zip->open($artifact_file) !== true) {
+        echo "ERROR: couldn't open PHP archive '$artifact_file'\n";
+        exit(1);
+    }
+    $readme = $zip->getFromName('readme-redist-bins.txt');
+    $zip->close();
+    if ($readme === false) {
+        echo "ERROR: PHP archive '$artifact_file' does not contain readme-redist-bins.txt\n";
+        exit(1);
+    }
+
+    $dist_dir = sys_get_temp_dir() . '/phpsdk-sbom-' . make_uuid();
+    if (!@mkdir($dist_dir, 0777, true)
+            || @file_put_contents($dist_dir . '/readme-redist-bins.txt', $readme) === false) {
+        echo "ERROR: couldn't create temporary distribution directory '$dist_dir'\n";
+        exit(1);
+    }
+
+    add_dependency_compliance_files(
+        $matches[1],
+        $php_source_dir,
+        $php_build_dir,
+        $dist_dir,
+        $source_sbom_file
+    );
+
+    if ($zip->open($artifact_file) !== true) {
+        echo "ERROR: couldn't update PHP archive '$artifact_file'\n";
+        exit(1);
+    }
+    for ($i = $zip->numFiles - 1; $i >= 0; --$i) {
+        $name = $zip->getNameIndex($i);
+        if ($name === 'readme-redist-bins.txt' || strpos($name, 'extras/sbom/') === 0) {
+            $zip->deleteIndex($i);
+        }
+    }
+
+    $files = array('readme-redist-bins.txt');
+    foreach (array('cdx', 'spdx', 'openvex') as $format) {
+        $path = 'extras/sbom/php.' . $format . '.json';
+        if (is_file($dist_dir . '/' . $path)) {
+            $files[] = $path;
+        }
+    }
+    foreach ($files as $path) {
+        $contents = @file_get_contents($dist_dir . '/' . $path);
+        if ($contents === false || !$zip->addFromString($path, $contents)) {
+            $zip->close();
+            echo "ERROR: couldn't add '$path' to PHP archive '$artifact_file'\n";
+            exit(1);
+        }
+    }
+    if (!$zip->close()) {
+        echo "ERROR: couldn't update PHP archive '$artifact_file'\n";
+        exit(1);
+    }
+
+    $it = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($dist_dir, FilesystemIterator::SKIP_DOTS),
+        RecursiveIteratorIterator::CHILD_FIRST
+    );
+    foreach ($it as $item) {
+        $item->isDir() ? @rmdir($item->getPathname()) : @unlink($item->getPathname());
+    }
+    @rmdir($dist_dir);
+}
+
+function add_dependency_compliance_files($php_version, $php_source_dir, $php_build_dir, $dist_dir, $source_sbom_file)
 {
     $licenses_dir = $php_build_dir . '/share/licenses';
-    $source_sbom_file = $php_source_dir . '/win32/build/sbom.json';
     $sbom_dir = $php_build_dir . '/share/sbom';
     $dist_sbom_dir = $dist_dir . '/extras/sbom';
     $license_templates = array(
@@ -624,12 +704,6 @@ function add_dependency_compliance_files($php_version, $php_source_dir, $php_bui
         'library' => "\n\n{library}\n{underline}\n",
         'file' => "\n{file}\n{underline}\n\n{text}\n",
     );
-    $php_license = @file_get_contents($php_source_dir . '/LICENSE');
-    if ($php_license === false || !preg_match('/^Copyright .*The PHP Group.*$/m', $php_license, $matches)) {
-        echo "ERROR: couldn't read PHP copyright notice\n";
-        exit(1);
-    }
-    $php_copyright = trim($matches[0]);
 
     if (is_dir($dist_sbom_dir)) {
         $it = new RecursiveIteratorIterator(
@@ -721,6 +795,17 @@ function add_dependency_compliance_files($php_version, $php_source_dir, $php_bui
         }
     }
 
+    if ($source_sbom_file === null) {
+        return;
+    }
+
+    $php_license = @file_get_contents($php_source_dir . '/LICENSE');
+    if ($php_license === false || !preg_match('/^Copyright .*The PHP Group.*$/m', $php_license, $matches)) {
+        echo "ERROR: couldn't read PHP copyright notice\n";
+        exit(1);
+    }
+    $php_copyright = trim($matches[0]);
+
     $source_sbom_text = @file_get_contents($source_sbom_file);
     $source_sbom = $source_sbom_text !== false ? json_decode($source_sbom_text, true) : null;
     if (
@@ -785,6 +870,35 @@ if (($argv[1] ?? null) === '--export') {
     exit(0);
 }
 
+if (($argv[1] ?? null) === '--package') {
+    if (count($argv) !== 5 && count($argv) !== 6) {
+        fwrite(STDERR, "Usage: phpsdk_sbom --package <php-source-dir> <php-build-dir> <php-archive> [php-sbom-metadata]\n");
+        exit(2);
+    }
+
+    $php_source_dir = rtrim(str_replace('\\', '/', $argv[2]), '/');
+    $php_build_dir = rtrim(str_replace('\\', '/', $argv[3]), '/');
+    $artifact_file = str_replace('\\', '/', $argv[4]);
+    $source_sbom_file = isset($argv[5]) ? str_replace('\\', '/', $argv[5]) : null;
+
+    if (!is_dir($php_source_dir)) {
+        fwrite(STDERR, "ERROR: PHP source directory '$php_source_dir' does not exist\n");
+        exit(2);
+    }
+    if ($source_sbom_file !== null && !is_file($source_sbom_file)) {
+        fwrite(STDERR, "ERROR: PHP SBOM metadata '$source_sbom_file' does not exist\n");
+        exit(2);
+    }
+
+    add_compliance_to_archive(
+        $php_source_dir,
+        $php_build_dir,
+        $artifact_file,
+        $source_sbom_file
+    );
+    exit(0);
+}
+
 if (count($argv) !== 5) {
     fwrite(STDERR, "Usage: phpsdk_sbom <php-version> <php-source-dir> <php-build-dir> <dist-dir>\n");
     exit(2);
@@ -804,4 +918,10 @@ if (!is_dir($dist_dir)) {
     exit(2);
 }
 
-add_dependency_compliance_files($php_version, $php_source_dir, $php_build_dir, $dist_dir);
+add_dependency_compliance_files(
+    $php_version,
+    $php_source_dir,
+    $php_build_dir,
+    $dist_dir,
+    $php_source_dir . '/win32/build/sbom.json'
+);

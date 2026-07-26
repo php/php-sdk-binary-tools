@@ -79,6 +79,11 @@ It is not required to hold the source in the PHP SDK directory. It could be usef
 
 More extensive documentation can be found on the [wiki](https://wiki.php.net/internals/windows/stepbystepbuild_sdk_2 "PHP wiki page").
 
+`phpsdk_sbom --package <php-source-dir> <php-build-dir> <php-archive> [php-sbom-metadata]`
+adds binary dependency licenses to a completed PHP archive. When metadata is supplied,
+it also generates the archive's SBOM documents. Use `phpsdk_sbom --export <php-archive>`
+to create artifact-specific sidecars.
+
 ## The old way
 
 - `git clone https://github.com/php/php-sdk-binary-tools.git c:\php-sdk`
