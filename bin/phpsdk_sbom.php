@@ -217,6 +217,10 @@ function create_cyclonedx_sbom($php_version, $php_license_id, $php_copyright, $s
             )));
         }
         foreach ($sbom['vulnerabilities'] ?? array() as $vulnerability) {
+            // Remove this compatibility mapping once Dependency-Track supports resolved_with_pedigree.
+            if (($vulnerability['analysis']['state'] ?? null) === 'resolved_with_pedigree') {
+                $vulnerability['analysis']['state'] = 'resolved';
+            }
             $affected_refs = array_column($vulnerability['affects'] ?? array(), 'ref');
             sort($affected_refs, SORT_STRING);
             $key = ($vulnerability['id'] ?? '') . '|' . implode(',', array_unique($affected_refs));
