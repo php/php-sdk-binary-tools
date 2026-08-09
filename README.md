@@ -233,4 +233,3 @@ available update, ideally in form of a pull request.  These repositories are:
 
 * https://github.com/php/php-src (for Windows CI)
 * https://github.com/php/php-windows-builder
-* https://github.com/php/setup-php-sdk
