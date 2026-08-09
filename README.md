@@ -79,11 +79,6 @@ It is not required to hold the source in the PHP SDK directory. It could be usef
 
 More extensive documentation can be found on the [wiki](https://wiki.php.net/internals/windows/stepbystepbuild_sdk_2 "PHP wiki page").
 
-`phpsdk_sbom --package <php-source-dir> <php-build-dir> <php-archive> [php-sbom-metadata]`
-adds binary dependency licenses to a completed PHP archive. When metadata is supplied,
-it also generates the archive's SBOM documents. Use `phpsdk_sbom --export <php-archive>`
-to create artifact-specific sidecars.
-
 ## The old way
 
 - `git clone https://github.com/php/php-sdk-binary-tools.git c:\php-sdk`
@@ -152,6 +147,22 @@ The existing training cases can be found in [pgo/cases](pgo/cases). Assumed the 
 After a training case is implemented and put under `pgo/cases`, the work environment needs to be reinitialized. The tool puts all the training data and necessary applications under `pgo/work`. Rename or remove that directory and rerun `phpsdk_pgo --init`.
 
 To skip a training case, add a file named `inactive` into the case folder.
+
+# SBOM
+
+The `phpsdk_sbom` tool can be used to add SBOM documents to a completed PHP
+Windows binary archive.
+
+`phpsdk_sbom --package <php-source-dir> <php-build-dir> <php-archive> <php-sbom-metadata>`
+merges the dependency SBOM documents found in `<php-build-dir>\share\sbom` with
+the libraries bundled in the PHP sources. The generated CycloneDX, SPDX and
+OpenVEX documents are added under `extras\sbom` in the archive. The metadata
+file is expected to contain the PHP license and the bundled library information.
+
+`phpsdk_sbom --export <php-archive>` creates artifact-specific CycloneDX, SPDX
+and OpenVEX sidecars next to the archive. These sidecars include the archive
+file name, download location, build configuration and SHA-256 checksum. The
+OpenVEX sidecar is only created when the archive contains OpenVEX statements.
 
 # Debugging PHP
 
