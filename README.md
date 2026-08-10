@@ -41,7 +41,7 @@ The legacy binary tools SDK is available from the [legacy branch](https://github
 
 ## Other tools
 
-- `bison` 3.3.2, `re2c` 1.1.1, `lemon`
+- `bison` 3.3.2, `re2c` 1.1.1, `lemon`, `jom` 1.1.7
 - `awk`, `gawk`, `sed`, `grep`, `jq`
 - `diff`, `diff3`, `patch`
 - `md5sum`, `sha1sum`, `sha224sum`, `sha256sum`, `sha384sum`, `sha512sum`
