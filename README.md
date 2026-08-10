@@ -6,6 +6,8 @@ PHP SDK is a tool kit for Windows PHP builds.
 
 The PHP SDK itself and the SDK own tools and code are licensed under the BSD 2-Clause license. With the usage of the other tools, you accept the respective licenses.
 
+Required notices for the bundled third-party binaries are listed in [`licenses/README.md`](licenses/README.md).
+
 # Overview
 
 The toolset consists on a mix of the handwritten scripts, selected MSYS2 parts and standalone programs. It supports any workflows, be it a custom, local or a CI build whatsoever.
