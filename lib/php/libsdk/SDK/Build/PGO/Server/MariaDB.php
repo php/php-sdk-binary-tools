@@ -124,7 +124,7 @@ class MariaDB extends Server implements DB
 		echo $this->name . " stopped.\n";
 	}
 
-	public function query(string $s, string $db = NULL) : void
+	public function query(string $s, ?string $db = NULL) : void
 	{
 		$ret = NULL;
 
@@ -145,7 +145,7 @@ class MariaDB extends Server implements DB
 		chdir($cwd);
 	}
 
-	public function import(string $path, string $db = NULL) : void
+	public function import(string $path, ?string $db = NULL) : void
 	{
 		$ret = NULL;
 

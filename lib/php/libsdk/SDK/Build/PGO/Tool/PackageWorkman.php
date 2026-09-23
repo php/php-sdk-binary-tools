@@ -35,7 +35,7 @@ class PackageWorkman
 	}
 
 	/* Only for zips! */
-	public function fetchAndUnzip(string $url, string $zip_bn, string $zip_tgt_dn, string $tgt_bn = NULL, bool $force = false) : void
+	public function fetchAndUnzip(string $url, string $zip_bn, string $zip_tgt_dn, ?string $tgt_bn = NULL, bool $force = false) : void
 	{
 		$cache_fn = $this->conf->getPkgCacheDir() . DIRECTORY_SEPARATOR . $zip_bn;
 
