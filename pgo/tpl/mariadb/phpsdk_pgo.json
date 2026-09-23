@@ -1,5 +1,5 @@
 {
-	"pkg_url": "https://archive.mariadb.org/mariadb-10.11.18/winx64-packages/mariadb-10.11.18-winx64.zip",
+	"pkg_url": "https://archive.mariadb.org/mariadb-10.11.19/winx64-packages/mariadb-10.11.19-winx64.zip",
 	"host": "localhost",
 	"port": 3307,
 	"user": "root",
