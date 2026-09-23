@@ -72,8 +72,8 @@ It is not required to hold the source in the PHP SDK directory. It could be usef
 
 - `git clone https://github.com/php/php-sdk-binary-tools.git c:\php-sdk`
 - `cd c:\php-sdk`
-- `git checkout php-sdk-2.8.2` or later
-- invoke `phpsdk-vs17-x64.bat`
+- `git checkout php-sdk-2.8.3` or later
+- invoke `phpsdk-vs18-x64.bat`
 - `phpsdk_buildtree phpmaster`
 - `git clone https://github.com/php/php-src.git && cd php-src`, or fetch a zipball
 - `phpsdk_deps --update --branch master`, use `phpsdk_deps --update --branch X.Y` for a non-master branch
