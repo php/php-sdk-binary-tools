@@ -23,7 +23,7 @@ class Series
 	/** @var Cache */
 	protected $cache;
 
-	public function __construct(string $stability, string $arch, Cache $cache, Fetcher $fetcher = NULL)
+	public function __construct(string $stability, string $arch, Cache $cache, ?Fetcher $fetcher = NULL)
 	{/*{{{*/
 		$this->fetcher = $fetcher;
 		$this->stability = $stability;
@@ -101,7 +101,7 @@ class Series
 		return $this->cache->cachedContentDiffers($series_file, $series_data);
 	}/*}}}*/
 
-	public function cache(string $path = NULL) : void
+	public function cache(?string $path = NULL) : void
 	{/*{{{*/
 		if (!$path) {
 			$path = $this->getSavePath();

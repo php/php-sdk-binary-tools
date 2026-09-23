@@ -129,7 +129,7 @@ class PostgreSQL extends Server implements DB
 		exec($cmd);
 	}
 
-	public function query(string $s, string $db = NULL) : void
+	public function query(string $s, ?string $db = NULL) : void
 	{
 		$ret = NULL;
 

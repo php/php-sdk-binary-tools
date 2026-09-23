@@ -107,7 +107,7 @@ class Config
 		return $base . DIRECTORY_SEPARATOR . "package_cache";
 	}
 
-	public function getJobDir(string $name = NULL) : string
+	public function getJobDir(?string $name = NULL) : string
 	{
 		$ret = $this->getWorkDir() . DIRECTORY_SEPARATOR . "job";
 
@@ -118,7 +118,7 @@ class Config
 		return $ret;
 	}
 
-	public function getSrvDir(string $name = NULL) : string
+	public function getSrvDir(?string $name = NULL) : string
 	{
 		$ret = $this->getWorkDir() . DIRECTORY_SEPARATOR . "server";
 
@@ -129,7 +129,7 @@ class Config
 		return $ret;
 	}
 
-	public function getHtdocs(string $name = NULL) : string
+	public function getHtdocs(?string $name = NULL) : string
 	{
 		$ret = $this->getWorkDir() . DIRECTORY_SEPARATOR . "htdocs";
 
@@ -140,7 +140,7 @@ class Config
 		return $ret;
 	}
 
-	public function getTplDir(string $name = NULL) : string
+	public function getTplDir(?string $name = NULL) : string
 	{
 		$ret = getenv("PHP_SDK_ROOT_PATH") . DIRECTORY_SEPARATOR . "pgo" . DIRECTORY_SEPARATOR . "tpl";
 
@@ -151,7 +151,7 @@ class Config
 		return $ret;
 	}
 
-	public function getCaseWorkDir(string $name = NULL) : string
+	public function getCaseWorkDir(?string $name = NULL) : string
 	{
 		$ret = $this->getWorkDir() . DIRECTORY_SEPARATOR . "htdocs";
 
@@ -162,7 +162,7 @@ class Config
 		return $ret;
 	}
 
-	public function getCasesTplDir(string $name = NULL) : string
+	public function getCasesTplDir(?string $name = NULL) : string
 	{
 		$ret = getenv("PHP_SDK_ROOT_PATH") . DIRECTORY_SEPARATOR . "pgo" . DIRECTORY_SEPARATOR . "cases";
 
@@ -321,7 +321,7 @@ class Config
 		return $this->getWorkDir() . DIRECTORY_SEPARATOR . "phpsdk_pgo.json";
 	}
 
-	public function dump(string $fn = NULL) : void
+	public function dump(?string $fn = NULL) : void
 	{
 		$fn = $fn ? $fn : $this->getWorkSectionsFilename();
 

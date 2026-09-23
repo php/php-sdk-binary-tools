@@ -196,7 +196,7 @@ abstract class PHP
 	}
 
 	/** @param array<string,string> $extra_env */
-	public function exec(string $php_cmd, string $args = NULL, array $extra_env = array()) : int
+	public function exec(string $php_cmd, ?string $args = NULL, array $extra_env = array()) : int
 	{
 		$env = $this->createEnv();
 		$exe = $this->getExeFilename();

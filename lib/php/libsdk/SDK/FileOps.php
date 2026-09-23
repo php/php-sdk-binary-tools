@@ -114,7 +114,7 @@ trait FileOps
 		return $ret;
 	}/*}}}*/
 
-	protected function download(string $url, string $dest_fn = NULL) : ?string
+	protected function download(string $url, ?string $dest_fn = NULL) : ?string
 	{/*{{{*/
 		$fd = NULL;
 		$retry = 0;
@@ -170,7 +170,7 @@ retry:
 	}/*}}}*/
 
 	/* TODO More detailed zip errors. */
-	protected function unzip(string $zip_fn, string $dest_fn, string $dest_dn = NULL) : void
+	protected function unzip(string $zip_fn, string $dest_fn, ?string $dest_dn = NULL) : void
 	{/*{{{*/
 		$zip = new \ZipArchive;
 

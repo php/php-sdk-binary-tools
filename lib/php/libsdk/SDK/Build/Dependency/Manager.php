@@ -64,7 +64,7 @@ class Manager
 	}/*}}}*/
 
 	/* FIXME implement rollback */
-	public function performUpdate(string &$msg = NULL, bool $force = false, bool $backup = true) : void
+	public function performUpdate(?string &$msg = NULL, bool $force = false, bool $backup = true) : void
 	{/*{{{*/
 		if (!$force) {
 			if (!$this->updatesAvailable()) {
