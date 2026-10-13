@@ -73,8 +73,10 @@ class PGO
 			//passthru("pgosweep $base $pgc");
 
 			if ($merge) {
-				shell_exec("pgomgr /merge:1000 $pgc $pgd");
-				//passthru("pgomgr /merge:1000 $pgc $pgd");
+				/* Amplified counts can crash the v143 ARM64 PGO optimizer. */
+				$weight = \SDK\Config::getCurrentArchName() === "arm64" && \SDK\Config::getCurrentCrtName() === "vs17" ? 1 : 1000;
+				shell_exec("pgomgr /merge:$weight $pgc $pgd");
+				//passthru("pgomgr /merge:$weight $pgc $pgd");
 				/* File is already spent, no need to keep it.
 					If seeing linker warnings about no pgc
 					were found for some object - most

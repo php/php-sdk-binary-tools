@@ -119,7 +119,7 @@ if 15 gtr %PHP_SDK_VS_NUM% (
 	set PHP_SDK_VS_RANGE="[%PHP_SDK_VS_NUM%,!PHP_SDK_VS_RANGE%!)"
 
 	set APPEND=x86.x64
-	if /i "%PHP_SDK_OS_ARCH%"=="arm64" (
+	if /i "%PHP_SDK_ARCH%"=="arm64" (
 		set APPEND=ARM64
 	)
 	set VS_VERSION_ARGS="-latest"
@@ -196,6 +196,9 @@ if /i "%PHP_SDK_OS_ARCH%"=="x64" (
 	set HOST_ARCH_NAME=%PHP_SDK_ARCH%
 )
 
+rem Toolsets before VS2022 require an x64 host for ARM64.
+if /i "%PHP_SDK_ARCH%"=="arm64" if %PHP_SDK_VS_NUM% LEQ 16 set HOST_ARCH_NAME=amd64
+
 if "%HOST_ARCH_NAME%"=="%TARGET_ARCH_NAME%" (
 	set VCVARSALL_ARCH_NAME=%HOST_ARCH_NAME%
 ) else if "%HOST_ARCH_NAME%_%TARGET_ARCH_NAME%"=="amd64_x86" (
@@ -215,6 +218,9 @@ if 15 gtr %PHP_SDK_VS_NUM% (
     ) else (
         set PHP_SDK_VS_SHELL_CMD="!PHP_SDK_VC_DIR!\Auxiliary\Build\vcvarsall.bat" !VCVARSALL_ARCH_NAME!
     )
+)
+if /i "%PHP_SDK_ARCH%"=="arm64" if %PHP_SDK_VS_NUM% EQU 16 (
+    set PHP_SDK_VS_SHELL_CMD=!PHP_SDK_VS_SHELL_CMD! 10.0.22621.0
 )
 set VCVARSALL_ARCH_NAME=
 
