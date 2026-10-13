@@ -16,6 +16,7 @@ set PHP_SDK_MSYS2_PATH=%PHP_SDK_ROOT_PATH%\msys2\usr\bin
 set PHP_SDK_PHP_CMD=%PHP_SDK_BIN_PATH%\php\do_php.bat
 
 set PATH=%PHP_SDK_BIN_PATH%;%PHP_SDK_MSYS2_PATH%;%PATH%
+if /i "%VSCMD_ARG_TGT_ARCH%"=="arm64" set PATH=%VCToolsInstallDir%bin\arm64;%PATH%
 
 for /f "tokens=1* delims=: " %%a in ('link /?') do ( 
 	set PHP_SDK_VC_TOOLSET_VER=%%b
