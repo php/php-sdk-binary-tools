@@ -4,6 +4,7 @@ This directory contains notices required for the third-party binaries bundled wi
 
 | Binary                                       | License                                    | Source                                                                             |
 |----------------------------------------------|--------------------------------------------|------------------------------------------------------------------------------------|
+| `msys2/usr/bin/bison.exe` | [bison.LICENSE.txt](bison.LICENSE.txt) | [GNU Bison](https://www.gnu.org/software/bison/), [MSYS2 package and source](https://packages.msys2.org/packages/bison) |
 | `bin/7za.exe`, `bin/7za.dll`, `bin/7zxa.dll` | [7zip.LICENSE.txt](7zip.LICENSE.txt)       | [7-Zip](https://github.com/ip7z/7zip)                                              |
 | `bin/jom.exe`                                | [jom.LICENSE.txt](jom.LICENSE.txt)         | [jom](https://github.com/qt-labs/jom), [Qt](https://github.com/qt/qtbase)          |
 | `bin/jq.exe`                                 | [jq.LICENSE.txt](jq.LICENSE.txt)           | [jq](https://github.com/jqlang/jq), [Oniguruma](https://github.com/kkos/oniguruma) |
